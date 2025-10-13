@@ -210,14 +210,29 @@ $result["msg"] = "invalide";
 
 
 
-
 	if($ok == true){
 				  $str = "INSERT INTO USERS VALUES ('".$login."','".$email."','".password_hash($pass, PASSWORD_DEFAULT)."','".$nom."','".$prenom."','".$date."','".$sexe."','".$adresse."','".$codepostal."','".$ville."','".$telephone."');";
-				  query($mysqli,$str) or die("Impossible de creer une compte dans ce moment<br>");
+
+				  //Cross-site Scripting (XSS)
+				  // query($mysqli,$str) or die("Impossible de creer une compte dans ce moment<br>");
+				  function query($link, $query){
+    					$resultat = mysqli_query($link, $query);
+    					if (!$resultat) {
+        				// Log de l'erreur technique côté serveur
+        					error_log("MySQL Error: " . mysqli_error($link) . " | Query: " . $query);
+
+        				// Affichage à l'utilisateur d'un message générique, sécurisé contre XSS
+        				die("Une erreur est survenue. Veuillez réessayer plus tard.");
+    }
+    return $resultat; }
 				  setcookie("user",$login);
 				  unset($return);
 				  $return["msg"] = "Opération réussie";
 	}
+
+
+
+
 $return["ok"] = false;
 mysqli_close($mysqli);	
 echo json_encode($return);

@@ -4,8 +4,29 @@
 		include("../Parametres.php");
 		include("../Fonctions.inc.php");
 		include("../Donnees.inc.php");
-			$mysqli=mysqli_connect($host,$user,$pass) or die("Problème de création de la base :".mysqli_error());
-			mysqli_select_db($mysqli,$base) or die("Impossible de sélectionner la base : $base");
+
+		//Cross-site Scripting (XSS)
+
+			$mysqli=mysqli_connect($host,$user,$pass) //or die("Problème de création de la base :".mysqli_error());
+
+			if (!$mysqli) {
+        		die("Problème de création de la base."); // message générique
+    		}
+    		mysqli_select_db($mysqli, $base) or die("Impossible de sélectionner la base.");
+
+    		//Fonction query corrigée contre XSS
+    		function query($link, $query) {
+        		$resultat = mysqli_query($link, $query);
+        		if (!$resultat) {
+            		// Log cote serveur pour debug
+            		error_log("MySQL Error: " . mysqli_error($link));
+
+            	// Message générique cote utilisateur
+            	die("Impossible de traiter la requête pour le moment.");
+        		}
+        	return $resultat;
+    		}
+    		$item = intval($_POST["item"]);
 			
 			$str0 = 'select * from favs where id_prod = '.$_POST["item"];
 			$str = "INSERT INTO FAVS VALUES('".$_SESSION["login"]."','".$_POST["item"]."')";
