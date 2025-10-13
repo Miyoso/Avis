@@ -1,0 +1,67 @@
+-- Table des utilisateurs
+CREATE TABLE IF NOT EXISTS utilisateurs
+(
+    ID_USER INT AUTO_INCREMENT PRIMARY KEY,
+    NOM     VARCHAR(100)        NOT NULL,
+    PRENOM  VARCHAR(100)        NOT NULL,
+    EMAIL   VARCHAR(255) UNIQUE NOT NULL,
+    MDP     VARCHAR(255)        NOT NULL,
+    ROLE    VARCHAR(50) DEFAULT 'client'
+);
+
+-- Table des produits
+CREATE TABLE IF NOT EXISTS produits
+(
+    ID_PROD    INT AUTO_INCREMENT PRIMARY KEY,
+    LIBELLE    VARCHAR(255) NOT NULL,
+    DESCRIPTIF TEXT,
+    PHOTO      VARCHAR(255)
+);
+
+-- Table des rubriques (catégories de meubles)
+CREATE TABLE IF NOT EXISTS rubrique
+(
+    ID_RUB      INT AUTO_INCREMENT PRIMARY KEY,
+    libelle_rub VARCHAR(100) NOT NULL
+);
+
+-- Table des commandes
+CREATE TABLE IF NOT EXISTS commandes
+(
+    ID_COMMANDE   INT AUTO_INCREMENT PRIMARY KEY,
+    ID_USER       INT NOT NULL,
+    DATE_COMMANDE DATETIME    DEFAULT CURRENT_TIMESTAMP,
+    STATUT        VARCHAR(50) DEFAULT 'en attente',
+    FOREIGN KEY (ID_USER) REFERENCES utilisateurs (ID_USER)
+);
+
+-- Table des favoris
+CREATE TABLE IF NOT EXISTS favoris
+(
+    ID_USER INT NOT NULL,
+    ID_PROD INT NOT NULL,
+    PRIMARY KEY (ID_USER, ID_PROD),
+    FOREIGN KEY (ID_USER) REFERENCES utilisateurs (ID_USER),
+    FOREIGN KEY (ID_PROD) REFERENCES produits (ID_PROD)
+);
+
+-- Table des détails de commande (panier)
+CREATE TABLE IF NOT EXISTS commande_details
+(
+    ID_COMMANDE INT NOT NULL,
+    ID_PROD     INT NOT NULL,
+    QUANTITE    INT DEFAULT 1,
+    PRIMARY KEY (ID_COMMANDE, ID_PROD),
+    FOREIGN KEY (ID_COMMANDE) REFERENCES commandes (ID_COMMANDE),
+    FOREIGN KEY (ID_PROD) REFERENCES produits (ID_PROD)
+);
+
+-- Table de liaison produits/rubriques
+CREATE TABLE IF NOT EXISTS appartient
+(
+    ID_PROD INT NOT NULL,
+    ID_RUB  INT NOT NULL,
+    PRIMARY KEY (ID_PROD, ID_RUB),
+    FOREIGN KEY (ID_PROD) REFERENCES produits (ID_PROD),
+    FOREIGN KEY (ID_RUB) REFERENCES rubrique (ID_RUB)
+);

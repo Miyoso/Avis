@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # ------------------------------------
+  # APPLICATION PHP (SERVEUR WEB)
+  # ------------------------------------
+  app:
+    build: .
+    container_name: taupe-meubles-app
+
+    volumes:
+      - ./www:/var/www/html
+
+    ports:
+      - "8080:80"
+
+#TODO Utiliser des variables d'environnement plutot que des valeurs en dur dans Parametre.php
+#    environment:
+#      DB_HOST: 127.0.0.1
+#      DB_NAME: TaupeMeubles
+#      DB_USER: root
+#      DB_PASSWORD: password
+
+    depends_on:
+      - db
+
+    restart: unless-stopped
+
+  # ------------------------------------
+  # BASE DE DONNÉES MySQL
+  # ------------------------------------
+  db:
+    image: mysql:8.0
+    container_name: taupe-meubles-db
+
+#TODO Modifier les valeurs et les mettre dans un fichier .env
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: TaupeMeubles
+      MYSQL_USER: taupe_user
+      MYSQL_PASSWORD: taupe_password
+
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ./init-db:/docker-entrypoint-initdb.d
+
+    ports:
+      - "3306:3306"
+
+    restart: unless-stopped
+
+volumes:
+  dbdata:
