@@ -31,8 +31,36 @@
 					$prix = mysqli_real_escape_string($mysqli,$_POST["prix"]);
 					$descriptif = mysqli_real_escape_string($mysqli,$_POST["descriptif"]);
 					$rubrique = mysqli_real_escape_string($mysqli,$_POST["rubrique"]);
-							
-					query($mysqli,"replace into `produits` (`Libelle`,`Prix`,`descriptif`,`photo`) values ('".$libelle."','".$prix."','".$descriptif."','".$file_result."')");
+
+                    //Cross-site Scripting (XSS)
+                    //ligne a corriger
+					//query($mysqli,"replace into `produits` (`Libelle`,`Prix`,`descriptif`,`photo`) values ('".$libelle."','".$prix."','".$descriptif."','".$file_result."')");
+
+                    //Propal corr
+
+                    $stmt = $mysqli->prepare("REPLACE INTO `produits` (`Libelle`,`Prix`,`descriptif`,`photo`) VALUES (?, ?, ?, ?)");
+                    if ($stmt === false) {
+                        error_log("Erreur préparation REPLACE produits: " . $mysqli->error);
+                        die("Une erreur est survenue. Merci de réessayer plus tard.");
+                    }
+
+                    $prix_val = floatval($prix);
+                    $photo_safe = basename($file_result);
+
+                    if (!$stmt->bind_param('sdss', $libelle, $prix_val, $descriptif, $photo_safe)) {
+                        error_log("Erreur bind_param REPLACE produits: " . $stmt->error);
+                        $stmt->close();
+                        die("Une erreur est survenue. Merci de réessayer plus tard.");
+                    }
+
+                    if (!$stmt->execute()) {
+                        error_log("Erreur execution REPLACE produits: " . $stmt->error . " -- libelle: " . $libelle);
+                        $stmt->close();
+                        die("Une erreur est survenue lors de l'enregistrement. Merci de réessayer.");
+                    }
+
+                    $stmt->close();
+
 					query($mysqli,'insert into appartient (id_prod,id_rub) values ((select max(id_prod) from produits),(select id_rub from rubrique where libelle_rub = \''.$rubrique.'\'))');
 					echo "Engretrement reussi";
 				}
