@@ -7,7 +7,20 @@ if(isset($_COOKIE["panier"]) && isset($_SESSION["login"]) && isset($_POST["num"]
         include("Fonctions.inc.php");
         include("Donnees.inc.php");
 
-        $mysqli=mysqli_connect($host,$user,$pass) or die("Problème de création de la base :".mysqli_error());
+        //Ligne Vuln : Information Exposure - Server Error Message
+        //$mysqli=mysqli_connect($host,$user,$pass) or die("Problème de création de la base :".mysqli_error());
+
+        // Corr Propal
+
+
+        $mysqli = @mysqli_connect($host, $user, $pass, $base);
+        if (!$mysqli) {
+
+            error_log("MySQL connect error: " . mysqli_connect_error() . " (host: {$host}, db: {$base})");
+
+            die("Oups — problème de connexion à la base. Merci de réessayer plus tard.");
+        }
+
         mysqli_select_db($mysqli,$base) or die("Impossible de sélectionner la base : $base");
 
         /* -----------------------------
@@ -58,7 +71,7 @@ if(isset($_COOKIE["panier"]) && isset($_SESSION["login"]) && isset($_POST["num"]
             }
         }
 
-       
+
         $stmt->close();
 
         setcookie("panier", "", time()-3600,"/");
