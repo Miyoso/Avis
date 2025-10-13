@@ -4,8 +4,20 @@ session_start();
 include("Parametres.php");
 include("Fonctions.inc.php");
 include("Donnees.inc.php");
-$mysqli = mysqli_connect($host, $user, $pass) or die("Problème de création de la base :" . mysqli_error());
-mysqli_select_db($mysqli, $base) or die("Impossible de sélectionner la base : $base");
+
+//Ligne Vuln
+//$mysqli = mysqli_connect($host, $user, $pass) or die("Problème de création de la base :" . mysqli_error());
+//mysqli_select_db($mysqli, $base) or die("Impossible de sélectionner la base : $base");
+
+//Correction Prop
+
+$mysqli = @mysqli_connect($host, $user, $pass, $base);
+if (!$mysqli) {
+
+    error_log("MySQL connect error: " . mysqli_connect_error() . " (host: {$host}, db: {$base})");
+
+    die("Oups — problème de connexion à la base. Merci de réessayer plus tard.");
+}
 
 $str = "SELECT * FROM USERS WHERE LOGIN = '" . $_SESSION["login"] . "'";
 $result = query($mysqli, $str) or die ("Impossible de faire une connection à base de donnèes<br>");
