@@ -3,8 +3,10 @@ include("Parametres.php");
 include("Fonctions.inc.php");
 include("Donnees.inc.php");
 
-$mysqli=mysqli_connect($host,$user,$pass) or die("Problème de création de la base :".mysqli_error());
-mysqli_select_db($mysqli,$base) or die("Impossible de sélectionner la base : $base");
+//MODIF $mysqli=mysqli_connect($host,$user,$pass) or die("Problème de création de la base :".mysqli_error());
+$mysqli=mysqli_connect($host,$user,$pass) or die("Une erreur est survenue.");
+//MODIF mysqli_select_db($mysqli,$base) or die("Impossible de sélectionner la base : $base");
+mysqli_select_db($mysqli,$base) or die("Une erreur est survenue.");
 
 
 $ok = true;
@@ -191,7 +193,7 @@ $result["msg"] = "invalide";
 		}
 		  if(isset($login)){
 				  $str = "SELECT EMAIL FROM USERS WHERE login = '".$login."'";
-			  $result = query($mysqli,$str) or die("Impossible de creer une compte dans ce moment<br>");
+			  $result = query($mysqli,$str) or die("Impossible de creer un compte pour le moment<br>");
 			  if(mysqli_num_rows($result)>0){
 				  $ok = false;
 				  $return["dejaEmail"] = "l'email saisi est déjà enregistré";
@@ -199,7 +201,7 @@ $result["msg"] = "invalide";
 			  
 			  
 			  $str = "SELECT LOGIN FROM USERS WHERE LOGIN = '".$login."'";
-			  $result = query($mysqli,$str) or die("Impossible de creer une compte dans ce moment<br>");
+			  $result = query($mysqli,$str) or die("Impossible de creer un compte pour le moment<br>");
 			  if(mysqli_num_rows($result)>0){
 				  $ok = false;
 				  $return["dejaLogin"] = "le login saisi est déjà enregistré";

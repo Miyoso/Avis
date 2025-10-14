@@ -12,7 +12,7 @@ if (isset($_POST["item"])) {
     //MODIF query($mysqli,'delete from produits where id_prod = '.$_POST["item"]);
     $item = isset($_POST["item"]) ? intval($_POST["item"]) : 0;
 
-    $stmt = mysqli_prepare($mysqli, "DELETE FROM produits WHERE id_prod = ?");
+    $stmt = mysqli_prepare($mysqli, "DELETE FROM PRODUITS WHERE id_prod = ?");
     mysqli_stmt_bind_param($stmt, "i", $item);
     mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);

@@ -11,7 +11,7 @@
 		//echo "<a href='ajouterProd.php'>Ajouter une rubrique</a><br/>";
 		echo "<hr>";
 		echo "<h2>Produits</h2><br/>";
-		$result = query($mysqli,'select id_prod,Libelle,Prix from produits');
+		$result = query($mysqli,'select id_prod,Libelle,Prix from PRODUITS');
 		
 		if(mysqli_num_rows($result)<=0){
 			echo "Aucun enregistrement dans la base de données";

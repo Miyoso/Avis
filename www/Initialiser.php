@@ -53,7 +53,7 @@
 					) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 				");
 				
-	query($mysqli,'CREATE TABLE IF NOT EXISTS `commande` (
+	query($mysqli,'CREATE TABLE IF NOT EXISTS COMMANDES (
   `ID_COM` bigint(20) NOT NULL AUTO_INCREMENT,
   `ID_PROD` int(11) NOT NULL,
   `ETAT` int(1) NOT NULL,
@@ -70,20 +70,20 @@
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;');
 	
 	
-	query($mysqli,'CREATE TABLE IF NOT EXISTS `HIERARCHIE` (
+	query($mysqli,'CREATE TABLE IF NOT EXISTS HIERARCHIE (
   `ID_PARENT` int(11) NOT NULL,
   `ID_ENFANT` int(11) NOT NULL,
   PRIMARY KEY (`id_parent`,`id_enfant`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;');
 	
 	
-	query($mysqli,'CREATE TABLE IF NOT EXISTS `RUBRIQUE` (
+	query($mysqli,'CREATE TABLE IF NOT EXISTS RUBRIQUES (
   `ID_RUB` int(11) NOT NULL AUTO_INCREMENT,
   `LIBELLE_RUB` varchar(80) NOT NULL,
   PRIMARY KEY (`ID_RUB`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;');
 
-query($mysqli,'CREATE TABLE IF NOT EXISTS `appartient` (
+query($mysqli,'CREATE TABLE IF NOT EXISTS APPARTIENT (
   `id_prod` int(11) NOT NULL,
   `id_rub` int(11) NOT NULL,
   PRIMARY KEY (`id_prod`,`id_rub`)
@@ -94,39 +94,39 @@ $num = 13;
 						
   // Insertion
   query($mysqli,"INSERT INTO USERS VALUES ('admin','admin@admin.com','".password_hash('pass', PASSWORD_DEFAULT)."','ADMIN','admin','01/01/1999','Homme',NULL,'57000',NULL,918633099);");
- query($mysqli,'insert into RUBRIQUE (LIBELLE_RUB)values (\'Lit\')');
+ query($mysqli,'insert into RUBRIQUES (LIBELLE_RUB)values (\'Lit\')');
  
    query($mysqli,'INSERT INTO PRODUITS (LIBELLE,PRIX,DESCRIPTIF,PHOTO) VALUES(\'Lit mezzanine\',249,\'Lit mezzanine en pin massif couchage 140x200cm THEO Couleur: Blanc , Dimensions: 140x200cm\',\'images\\\meubles\\\033fb78dae72240e5826c74b0932798c.jpg\')');
    query($mysqli,'INSERT INTO PRODUITS (LIBELLE,PRIX,DESCRIPTIF,PHOTO) VALUES(\'Lit en Teck\',1005,\'Aspect authentique garanti grâce à une très belle finition de Teck massif vieilli.
 Des trous et des nœuds soigneusement préservés pour révéler la beauté naturelle du bois et créer un aspect sauvage et rustique\',\'images\\\meubles\\\L001-MLI6013001-Z.jpg\')');
-	query($mysqli,"insert into appartient values(".$num++.",".$rub++.")");
-	query($mysqli,"insert into appartient values(".$num++.",".$rub.")");
+	query($mysqli,"insert into APPARTIENT values(".$num++.",".$rub++.")");
+	query($mysqli,"insert into APPARTIENT values(".$num++.",".$rub.")");
  
-  query($mysqli,'insert into RUBRIQUE (LIBELLE_RUB)values (\'Cuisine\')');
+  query($mysqli,'insert into RUBRIQUES(LIBELLE_RUB)values (\'Cuisine\')');
   query($mysqli,'INSERT INTO PRODUITS (LIBELLE,PRIX,DESCRIPTIF,PHOTO) VALUES(\'Meuble bas de cuisine\',125,\'Excellent rapport qualité prix
 Fabriqué en France
 Coloris jeunes et tendances
 A associer avec l ensemble de la collection SPRING pour un aménagement réussi\',\'images\\\meubles\\\MCU1254891-Z.jpg\')');
-   	query($mysqli,"insert into appartient values(".$num++.",".$rub++.")");
+   	query($mysqli,"insert into APPARTIENT values(".$num++.",".$rub++.")");
   
-  query($mysqli,'insert into RUBRIQUE (LIBELLE_RUB)values (\'Table\')');
+  query($mysqli,'insert into RUBRIQUES(LIBELLE_RUB)values (\'Table\')');
    query($mysqli,'INSERT INTO PRODUITS (LIBELLE,PRIX,DESCRIPTIF,PHOTO) VALUES(\'Table a manger\',469,\'Table à manger rectangulaire bois avec allonge. Panneau de particules revêtu de mélamine Couleur : Chêne brut et béton Dimensions : Longueur : 180/240 cm Largeur : 90 cm Hauteur : 79 cm Table à manger ...\',\'images\\\meubles\\\L001-MSM1254818-Z.jpg\')');
-	query($mysqli,"insert into appartient values(".$num++.",".$rub++.")");
+	query($mysqli,"insert into APPARTIENT values(".$num++.",".$rub++.")");
 	
 	
-  query($mysqli,'insert into RUBRIQUE (LIBELLE_RUB)values (\'Chaise\')');
+  query($mysqli,'insert into RUBRIQUES(LIBELLE_RUB)values (\'Chaise\')');
    query($mysqli,'INSERT INTO PRODUITS (LIBELLE,PRIX,DESCRIPTIF,PHOTO) VALUES(\'Chaise design simili\',99,\'Pin massif. Assise multiplis mousse 50kg/m3. Dossier mousse 50kg/m3. Revêtement : polyuréthane\',\'MSM6014266-Z.jpg\')');
- 	query($mysqli,"insert into appartient values(".$num++.",".$rub++.")");
+ 	query($mysqli,"insert into APPARTIENT values(".$num++.",".$rub++.")");
 	
-  query($mysqli,'insert into RUBRIQUE (LIBELLE_RUB)values (\'Buffet\')');
+  query($mysqli,'insert into RUBRIQUES(LIBELLE_RUB)values (\'Buffet\')');
   $rub++;
   
-  query($mysqli,'insert into RUBRIQUE (LIBELLE_RUB)values (\'Armoire\')');
+  query($mysqli,'insert into RUBRIQUES(LIBELLE_RUB)values (\'Armoire\')');
   query($mysqli,'INSERT INTO PRODUITS (LIBELLE,PRIX,DESCRIPTIF,PHOTO) VALUES(\'Armoire de chambre en bois\',405,\'2 portes miroirs coulissantes. 1/3 partie lingère : 4 étagères. 2/3 partie penderie : 1 tringle et une tablette. A monter soi-même avec la notice. Garantie 2 ans\',\'images\\\meubles\\\L001-MCH6085585-Z.jpg\')');
-	query($mysqli,"insert into appartient values(".$num++.",".$rub++.")");
+	query($mysqli,"insert into APPARTIENT values(".$num++.",".$rub++.")");
   
  
- query($mysqli,'insert into RUBRIQUE (LIBELLE_RUB)values (\'Bureau\')');
+ query($mysqli,'insert into RUBRIQUES(LIBELLE_RUB)values (\'Bureau\')');
   query($mysqli,'INSERT INTO PRODUITS (LIBELLE,PRIX,DESCRIPTIF,PHOTO) VALUES(\'Bureau verre et métal\',129,\'Bureau de dessin ultra moderne
 Rangements pratiques
 Espace de travail conséquent et aéré\',\'images\\\meubles\\\MBU6060008-Z.jpg\')');
@@ -134,16 +134,16 @@ Espace de travail conséquent et aéré\',\'images\\\meubles\\\MBU6060008-Z.jpg\
 Fonctionnel et design
 Méthode de fabrication respectueuse de l environnement
 Constitué de matériaux fiables et haut de gamme\',\'images\\\meubles\\\L001-MBU0016172-Z.jpg\')');   
-  	query($mysqli,"insert into appartient values(".$num++.",".$rub++.")");
-	query($mysqli,"insert into appartient values(".$num++.",".$rub.")");
+  	query($mysqli,"insert into APPARTIENT values(".$num++.",".$rub++.")");
+	query($mysqli,"insert into APPARTIENT values(".$num++.",".$rub.")");
   
   
-  query($mysqli,'insert into RUBRIQUE (LIBELLE_RUB)values (\'SalleDeBain\')');
+  query($mysqli,'insert into RUBRIQUES(LIBELLE_RUB)values (\'SalleDeBain\')');
   query($mysqli,'INSERT INTO PRODUITS (LIBELLE,PRIX,DESCRIPTIF,PHOTO) VALUES(\'meuble vasque + miroir + colonne\',675,\'Ensemble de salle de bain complet
 Style contemporain ambiance zen
 Rangement fonctionnel avec tiroirs à compartiments
 Fermeture silencieuse des tiroirs et des portes\',\'images\\\meubles\\\B001-MBA1254590-2-Z.jpg\')');
-  	query($mysqli,"insert into appartient values(".$num++.",".$rub++.")");
+  	query($mysqli,"insert into APPARTIENT values(".$num++.",".$rub++.")");
 
 
 

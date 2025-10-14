@@ -4,9 +4,11 @@
 		include("Fonctions.inc.php");
 		include("Donnees.inc.php");
 
-		$mysqli=mysqli_connect($host,$user,$pass) or die("Problème de création de la base :".mysqli_error());
-		mysqli_select_db($mysqli,$base) or die("Impossible de sélectionner la base : $base");
-		$result = query($mysqli,'select * from produits limit 4');
+		//$mysqli=mysqli_connect($host,$user,$pass) or die("Problème de création de la base :".mysqli_error());
+		$mysqli=mysqli_connect($host,$user,$pass) or die("Une erreur est survenue.");
+		//mysqli_select_db($mysqli,$base) or die("Impossible de sélectionner la base : $base");
+		mysqli_select_db($mysqli,$base) or die("Une erreur est survenue.");
+		$result = query($mysqli,'select * from PRODUITS limit 4');
 		
 		echo '<div class="wrapper style5"><section id="team" class="container"><div class="row">';
 		$temp = 0;

@@ -77,7 +77,7 @@
 
                     $stmt->close();
 
-					query($mysqli,'insert into appartient (id_prod,id_rub) values ((select max(id_prod) from produits),(select id_rub from rubrique where libelle_rub = \''.$rubrique.'\'))');
+					query($mysqli,'insert into appartient (id_prod,id_rub) values ((select max(id_prod) from PRODUITS),(select id_rub from rubrique where libelle_rub = \''.$rubrique.'\'))');
 					echo "Engretrement reussi";
 				}
 				else

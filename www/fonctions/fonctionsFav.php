@@ -70,20 +70,20 @@ if(isset($_POST["item"]) && isset($_SESSION["login"])){
     */
 
     // nouveau code sec
-    $sqlCheck = "SELECT * FROM favs WHERE id_prod = ? AND login = ?";
+    $sqlCheck = "SELECT * FROM FAVS WHERE id_prod = ? AND login = ?";
     $result = safe_query($mysqli, $sqlCheck, 'is', [$item, $login]);
 
     if ($result && $result->num_rows > 0 && isset($_POST["x"])) {
         //Ancien code vul
         // query($mysqli,'delete from favs where id_prod = '.$_POST["item"].' and LOGIN = \''.$_SESSION["login"].'\'');
         //Nouveau code sec
-        safe_query($mysqli, "DELETE FROM favs WHERE id_prod = ? AND login = ?", 'is', [$item, $login]);
+        safe_query($mysqli, "DELETE FROM FAVS WHERE id_prod = ? AND login = ?", 'is', [$item, $login]);
         echo 'delete set';
     } else {
         //Ancien code vulne
         // query($mysqli,$str);
         //Nouveau code sec
-        safe_query($mysqli, "INSERT INTO favs (login, id_prod) VALUES (?, ?)", 'si', [$login, $item]);
+        safe_query($mysqli, "INSERT INTO FAVS (login, id_prod) VALUES (?, ?)", 'si', [$login, $item]);
         echo 'set';
     }
 

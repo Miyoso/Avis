@@ -78,7 +78,7 @@
 										$mysqli=mysqli_connect($host,$user,$pass) or die("Problème de création de la base :".mysqli_error());
 										mysqli_select_db($mysqli,$base) or die("Impossible de sélectionner la base : $base");
 										//echo "<a href='ajouterProd.php'>Ajouter une rubrique</a><br/>";
-										$result = query($mysqli,'select produits.id_prod as id,produits.Libelle as lib,produits.Photo as photo, produits.Descriptif as descr from produits,rubrique,appartient where appartient.id_prod = produits.id_prod and appartient.id_rub = rubrique.id_rub and libelle_rub = \'SalleDeBain\'');
+                                        $result = query($mysqli,'select PRODUITS.id_prod as id,PRODUITS.Libelle as lib,PRODUITS.Photo as photo, PRODUITS.Descriptif as descr from PRODUITS,RUBRIQUES,APPARTIENT where APPARTIENT.id_prod = PRODUITS.id_prod and APPARTIENT.id_rub = RUBRIQUES.id_rub and libelle_rub = \'SalleDeBain\'');
 										
 										echo '<div class="wrapper style5"><section id="team" class="container"><div class="row">';
 										$temp = 0;

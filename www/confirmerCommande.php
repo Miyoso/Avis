@@ -31,7 +31,7 @@ if(isset($_COOKIE["panier"]) && isset($_SESSION["login"]) && isset($_POST["num"]
 
         // Proposition corr
 
-        $sql = "REPLACE INTO commande (ID_PROD, ID_CLIENT, DATE, NOM, PRENOM, ADRESSE, CP, VILLE, TELEPHONE) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "REPLACE INTO COMMANDES (ID_PROD, ID_CLIENT, DATE, NOM, PRENOM, ADRESSE, CP, VILLE, TELEPHONE) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $mysqli->prepare($sql);
         if ($stmt === false) {
             error_log("Erreur préparation REPLACE commande: " . $mysqli->error);

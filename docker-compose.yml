@@ -14,12 +14,14 @@ services:
     ports:
       - "8080:80"
 
-#TODO Utiliser des variables d'environnement plutot que des valeurs en dur dans Parametre.php
-#    environment:
-#      DB_HOST: 127.0.0.1
-#      DB_NAME: TaupeMeubles
-#      DB_USER: root
-#      DB_PASSWORD: password
+    #TODO command: php Initialiser.php && apache2-foreground
+
+    #TODO Utiliser des variables d'environnement plutot que des valeurs en dur dans Parametre.php
+    #    environment:
+    #      DB_HOST: 127.0.0.1
+    #      DB_NAME: TaupeMeubles
+    #      DB_USER: root
+    #      DB_PASSWORD: password
 
     depends_on:
       - db
@@ -42,7 +44,7 @@ services:
 
     volumes:
       - db_data:/var/lib/mysql
-      - ./init-db:/docker-entrypoint-initdb.d
+      #- ./init-db:/docker-entrypoint-initdb.d
 
     ports:
       - "3306:3306"

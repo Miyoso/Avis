@@ -4,11 +4,13 @@
 		include("Fonctions.inc.php");
 		include("Donnees.inc.php");
 
-		$mysqli=mysqli_connect($host,$user,$pass) or die("Problème de création de la base :".mysqli_error());
-		mysqli_select_db($mysqli,$base) or die("Impossible de sélectionner la base : $base");
-		
+		//MODIF $mysqli=mysqli_connect($host,$user,$pass) or die("Problème de création de la base :".mysqli_error());
+		$mysqli=mysqli_connect($host,$user,$pass) or die("Une erreur est survenue.");
+		//MODIF mysqli_select_db($mysqli,$base) or die("Impossible de sélectionner la base : $base");
+		mysqli_select_db($mysqli,$base) or die("Une erreur est survenue.");
+
 		echo "<h2>Commandes</h2><br/>";
-		$result = query($mysqli,'select id_com,id_client,(select prenom from users where users.login = commande.id_client limit 1) as prenom,(select nom from users where users.login = commande.id_client limit 1) as nom,id_prod,date,ADRESSE,cp,ville from commande');
+		$result = query($mysqli,'select id_com,id_client,(select prenom from USERS where USERS.login = COMMANDES.id_client limit 1) as prenom,(select nom from USERS where USERS.login = COMMANDES.id_client limit 1) as nom,id_prod,date,ADRESSE,cp,ville from COMMANDES');
 		if(mysqli_num_rows($result)<=0){
 			echo "Aucun enregistrement dans la base de données";
 		}

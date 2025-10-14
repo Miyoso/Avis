@@ -19,12 +19,12 @@ if (isset($_SESSION["login"]) && $_SESSION["login"] = 'admin' && isset($_POST["i
 
     $id = isset($_POST["id"]) ? intval($_POST["id"]) : 0;
 
-    $stmt1 = mysqli_prepare($mysqli, "DELETE FROM favs WHERE id_prod = ?");
+    $stmt1 = mysqli_prepare($mysqli, "DELETE FROM FAVS WHERE id_prod = ?");
     mysqli_stmt_bind_param($stmt1, "i", $id);
     mysqli_stmt_execute($stmt1);
     mysqli_stmt_close($stmt1);
 
-    $stmt2 = mysqli_prepare($mysqli, "DELETE FROM produits WHERE id_prod = ?");
+    $stmt2 = mysqli_prepare($mysqli, "DELETE FROM PRODUITS WHERE id_prod = ?");
     mysqli_stmt_bind_param($stmt2, "i", $id);
     mysqli_stmt_execute($stmt2);
     mysqli_stmt_close($stmt2);
