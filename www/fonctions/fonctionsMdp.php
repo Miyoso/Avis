@@ -14,8 +14,16 @@
 		
 		//verification si l'email a été envoyé
 		if($val){
-			
-			$result = mysql_query("insert into users (PASS) values ('".password_hash(($newpass), PASSWORD_DEFAULT)."') where email='".$_POST["email"]."'");
+			//Vuln ligne naze SQL Injection
+			//$result = mysql_query("insert into users (PASS) values ('".password_hash(($newpass), PASSWORD_DEFAULT)."') where email='".$_POST["email"]."'");
+
+            //correc
+
+            $stmt = $mysqli->prepare("UPDATE users SET PASS = ? WHERE email = ?");
+            $stmt->bind_param("ss", password_hash($newpass, PASSWORD_DEFAULT), $_POST["email"]);
+            $stmt->execute();
+            $stmt->close();
+
 			echo "Nouveau mot de pass envoyé";
 			
 		}else{
