@@ -18,9 +18,21 @@
 						$arr = json_decode($_COOKIE["panier"]);
 						echo '<table>';
 						$item = 0;
-						foreach($arr as $item){
-								$str = 'select * from produits where id_prod = '.$item;
-								$result = query($mysqli,$str);
+
+                        //SQL Injection
+                        //Ligne pas bon
+						//foreach($arr as $item){
+								//$str = 'select * from produits where id_prod = '.$item;
+								//$result = query($mysqli,$str);
+                            //propal de rep
+                            $stmt = $mysqli->prepare("SELECT * FROM produits WHERE id_prod = ?");
+                            foreach($arr as $item){
+                                $id = intval($item); // sécurisation de la valeur du cookie
+                                $stmt->bind_param("i", $id);
+                                $stmt->execute();
+                                $result = $stmt->get_result();
+                                $row = $result->fetch_assoc();
+
 								$row = mysqli_fetch_assoc($result);
 											echo "<tr><td width='50px'>ID</td><td width='80px'>Libelle</td><td width='80px'>Prix</td></tr>"; 
 											echo "<tr><td colspan='3'><hr></td></tr>";
