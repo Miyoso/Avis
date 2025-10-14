@@ -83,7 +83,7 @@ if(isset($_POST["item"]) && isset($_SESSION["login"])){
         //Ancien code vulne
         // query($mysqli,$str);
         //Nouveau code sec
-        safe_query($mysqli, "INSERT INTO FAVS (login, id_prod) VALUES (?, ?)", 'si', [$login, $item]);
+        safe_query($mysqli, "INSERT IGNORE INTO FAVS (login, id_prod) VALUES (?, ?)", 'si', [$login, $item]);
         echo 'set';
     }
 
