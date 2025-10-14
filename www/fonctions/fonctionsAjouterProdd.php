@@ -5,9 +5,23 @@
 		$file_result = 'Error';
 		
 	}else{
-		$file_result = 'images/'.$_FILES['file']['name'];
-		move_uploaded_file($_FILES['file']['tmp_name'],'../'.$file_result);
-		
+        //ligne inco
+//		$file_result = 'images/'.$_FILES['file']['name'];
+//		move_uploaded_file($_FILES['file']['tmp_name'],'../'.$file_result);
+
+        //propal correc
+        //Path Traversal
+        $allowed = ['jpg','jpeg','png','bmp'];
+        $baseName = basename($_FILES['file']['name']);
+        $ext = strtolower(pathinfo($baseName, PATHINFO_EXTENSION));
+
+        if (in_array($ext, $allowed, true) && is_uploaded_file($_FILES['file']['tmp_name'])) {
+            $file_result = 'images/' . $baseName;
+            move_uploaded_file($_FILES['file']['tmp_name'], '../' . $file_result);
+        } else {
+            $file_result = 'Error';
+        }
+
 		include("../Parametres.php");
 		include("../Fonctions.inc.php");
 		include("../Donnees.inc.php");
