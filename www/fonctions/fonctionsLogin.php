@@ -18,13 +18,15 @@ session_start();
 													$row = mysqli_fetch_assoc($result);
 													if(password_verify($pass, $row["PASS"])){
 														$_SESSION["login"] = $row["LOGIN"];
+                                                        $_SESSION["isAdmin"] = $row["IS_ADMIN"];
 														$_SESSION["NOM"] = $row["NOM"];
 														$_SESSION["PRENOM"] = $row["PRENOM"];
 														$_SESSION["ADRESSE"] = $row["ADRESSE"];
 														$_SESSION["CP"] = $row["CODEP"];
 														$_SESSION["VILLE"] = $row["VILLE"];
 														$_SESSION["TELEPHONE"] = $row["TELEPHONE"];
-														unset($return);
+
+                                                        unset($return);
 														$return["msg"] = "Connéxion réussi";
 														mysqli_close($mysqli);
 														echo $return["msg"];
