@@ -34,15 +34,35 @@
                                 $row = $result->fetch_assoc();
 
 								$row = mysqli_fetch_assoc($result);
-											echo "<tr><td width='50px'>ID</td><td width='80px'>Libelle</td><td width='80px'>Prix</td></tr>"; 
-											echo "<tr><td colspan='3'><hr></td></tr>";
-												echo "<tr>";
-												echo "<td id='item'>".$row["ID_PROD"]."</td><td> ".$row["LIBELLE"]."</td><td> ".$row["PRIX"]."</td>";
-												echo '<td><button onclick="removePanier('.$row["ID_PROD"].','.$item.')">effacer</button></td>';
-												echo "</tr>";
-												echo "<tr><td colspan='3'><hr></td></tr>";
-									
-						}
+
+                                //ancienne ligne
+//											echo "<tr><td width='50px'>ID</td><td width='80px'>Libelle</td><td width='80px'>Prix</td></tr>";
+//											echo "<tr><td colspan='3'><hr></td></tr>";
+//												echo "<tr>";
+//												echo "<td id='item'>".$row["ID_PROD"]."</td><td> ".$row["LIBELLE"]."</td><td> ".$row["PRIX"]."</td>";
+//												echo '<td><button onclick="removePanier('.$row["ID_PROD"].','.$item.')">effacer</button></td>';
+//												echo "</tr>";
+//												echo "<tr><td colspan='3'><hr></td></tr>";
+
+
+                                //XSS
+                                echo "<tr><td width='50px'>ID</td><td width='80px'>Libelle</td><td width='80px'>Prix</td></tr>";
+                                echo "<tr><td colspan='3'><hr></td></tr>";
+                                echo "<tr>";
+
+                                // Échapper les sorties HTML
+                                $outId   = htmlspecialchars($row["ID_PROD"], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                $outLib  = htmlspecialchars($row["LIBELLE"], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                $outPrix = htmlspecialchars($row["PRIX"], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+
+
+                                $jsId   = intval($row["ID_PROD"]);
+                                $jsItem = intval($item);
+
+                                echo "<td id='item'>".$outId."</td><td> ".$outLib."</td><td> ".$outPrix."</td>";
+                                echo '<td><button onclick="removePanier('.$jsId.','.$jsItem.')">effacer</button></td>';
+
+                            }
 						echo '</table>';
 						mysqli_close($mysqli);
 					}
