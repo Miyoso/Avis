@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.9'
 
 services:
   # ------------------------------------
@@ -9,7 +9,7 @@ services:
     container_name: taupe-meubles-app
 
     volumes:
-      - ./www:/var/www/html
+      - ./www:/var/www/html:ro # Montre le code source en lecture seule
 
     ports:
       - "8080:80"
@@ -30,7 +30,7 @@ services:
   # BASE DE DONNÉES MySQL
   # ------------------------------------
   db:
-    image: mysql:8.0
+    image: mysql:8.0.43
     container_name: taupe-meubles-db
 
 #TODO Modifier les valeurs et les mettre dans un fichier .env
@@ -41,7 +41,7 @@ services:
       MYSQL_PASSWORD: taupe_password
 
     volumes:
-      - dbdata:/var/lib/mysql
+      - db_data:/var/lib/mysql
       - ./init-db:/docker-entrypoint-initdb.d
 
     ports:
@@ -49,5 +49,10 @@ services:
 
     restart: unless-stopped
 
+networks:
+  taupe-meubles-network:
+    driver: bridge
+
 volumes:
-  dbdata:
+  db_data:
+    driver: local

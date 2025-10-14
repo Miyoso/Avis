@@ -1,5 +1,4 @@
-FROM php:8.2-apache
-LABEL authors="gabrieldchr"
+FROM php:apache
 
 # Ajouter ici les extensions spécifiques dont votre application a besoin
 RUN apt-get update && \
