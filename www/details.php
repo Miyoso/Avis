@@ -46,7 +46,7 @@
         $mysqli=mysqli_connect($host,$user,$pass) or die("Une erreur est survenue.");
 		//MODIF mysqli_select_db($mysqli,$base) or die("Impossible de sélectionner la base : $base");
         mysqli_select_db($mysqli,$base) or die("Une erreur est survenue.");
-		$result = query($mysqli,'select * from rubrique');
+		$result = query($mysqli,'select * from RUBRIQUES');
 								
 		if(isset($_GET["prod"])){
             //MODIF $result = query($mysqli,'select * from produits where id_prod = \''.$_GET["prod"].'\'');
@@ -55,7 +55,7 @@
 
             //MODIF $result = query($mysqli, "select * from produits where id_prod = '$id_prod'");
             //Utilisation de requête préparée pour éviter les injections SQL
-            $stmt = mysqli_prepare($mysqli, "SELECT * FROM produits WHERE id_prod = ?");
+            $stmt = mysqli_prepare($mysqli, "SELECT * FROM PRODUITS WHERE id_prod = ?");
             mysqli_stmt_bind_param($stmt, "s", $id_prod);
             mysqli_stmt_execute($stmt);
             $result = mysqli_stmt_get_result($stmt);

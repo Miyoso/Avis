@@ -21,7 +21,7 @@
 					echo "<tr><td width='50px'>ID</td><td width='80px'>Libelle</td><td>Rubrique</td><td width='80px'>Prix</td></tr>"; 
 					echo "<tr><td colspan='3'><hr></td></tr>";
 					while ($row = mysqli_fetch_assoc($result)){
-						$result2 = query($mysqli,'select LIBELLE_RUB from Rubrique,appartient where rubrique.id_rub = appartient.id_rub and appartient.id_prod = '.$row["id_prod"].' limit 1');
+						$result2 = query($mysqli,'select LIBELLE_RUB from RUBRIQUES,APPARTIENT where RUBRIQUES.id_rub = APPARTIENT.id_rub and APPARTIENT.id_prod = '.$row["id_prod"].' limit 1');
 						$rub = mysqli_fetch_assoc($result2);
 						echo "<tr>";
 						echo "<td id='item'><a href='details.php?prod=".$row["id_prod"]."'>".$row["id_prod"]."</a></td><td> ".$row["Libelle"]."</td><td>".$rub["LIBELLE_RUB"]."</td><td> ".$row["Prix"]."</td>";

@@ -7,8 +7,8 @@
 		$mysqli=mysqli_connect($host,$user,$pass) or die("Problème de création de la base :".mysqli_error());
 		mysqli_select_db($mysqli,$base) or die("Impossible de sélectionner la base : $base");	
 		echo "<hr>";
-		$result = query($mysqli,'select login,prenom,nom,email,adresse,ville,telephone from users where login = \'admin\'');
-		$result2 = query($mysqli,'select login,prenom,nom,email,adresse,ville,telephone from users where login != \'admin\'');
+		$result = query($mysqli,'select login,prenom,nom,email,adresse,ville,telephone from USERS where login = \'admin\'');
+		$result2 = query($mysqli,'select login,prenom,nom,email,adresse,ville,telephone from USERS where login != \'admin\'');
 		if((mysqli_num_rows($result)>0) || (mysqli_num_rows($result2)>0)){
 			
 			echo "<table>";
