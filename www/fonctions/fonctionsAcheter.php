@@ -12,9 +12,11 @@
 						include("Fonctions.inc.php");
 						include("Donnees.inc.php");
 
-						$mysqli=mysqli_connect($host,$user,$pass) or die("Problème de création de la base :".mysqli_error());
-						mysqli_select_db($mysqli,$base) or die("Impossible de sélectionner la base : $base");
-						
+						//MODIF $mysqli=mysqli_connect($host,$user,$pass) or die("Problème de création de la base :".mysqli_error());
+						$mysqli=mysqli_connect($host,$user,$pass) or die("Une erreur est survenue.");
+						//MODIF mysqli_select_db($mysqli,$base) or die("Impossible de sélectionner la base : $base");
+						mysqli_select_db($mysqli,$base) or die("Une erreur est survenue.");
+
 						$arr = json_decode($_COOKIE["panier"]);
 						echo '<table>';
 						$item = 0;
@@ -25,7 +27,7 @@
 								//$str = 'select * from produits where id_prod = '.$item;
 								//$result = query($mysqli,$str);
                             //propal de rep
-                            $stmt = $mysqli->prepare("SELECT * FROM produits WHERE id_prod = ?");
+                            $stmt = $mysqli->prepare("SELECT * FROM PRODUITS WHERE id_prod = ?");
                             foreach($arr as $item){
                                 $id = intval($item); // sécurisation de la valeur du cookie
                                 $stmt->bind_param("i", $id);

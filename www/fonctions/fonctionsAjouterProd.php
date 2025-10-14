@@ -4,9 +4,11 @@
 		include("Fonctions.inc.php");
 		include("Donnees.inc.php");
 
-		$mysqli=mysqli_connect($host,$user,$pass) or die("Problème de création de la base :".mysqli_error());
-		mysqli_select_db($mysqli,$base) or die("Impossible de sélectionner la base : $base");
-		$result = query($mysqli,"select distinct LIBELLE_RUB from RUBRIQUE");
+		//MODIF $mysqli=mysqli_connect($host,$user,$pass) or die("Problème de création de la base :".mysqli_error());
+		$mysqli=mysqli_connect($host,$user,$pass) or die("Une erreur est survenue.");
+		//MODIF mysqli_select_db($mysqli,$base) or die("Impossible de sélectionner la base : $base");
+		mysqli_select_db($mysqli,$base) or die("Une erreur est survenue");
+        $result = query($mysqli,"select distinct libelle_rub from RUBRIQUES");
 		echo "<h2>Ajouter produit</h2><br/>";
 		echo "<form  enctype='multipart/form-data' action='fonctions/fonctionsAjouterProdd.php' method='post' class='putImages'>";
 		echo "<table>";

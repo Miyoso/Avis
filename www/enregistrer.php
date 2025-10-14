@@ -30,12 +30,14 @@ if ((isset($_POST["loginbdd"])) && (isset($_POST["passwordbdd"]))) {
         }
 
 
-        if (sizeof($login) > 100) {
-            $return["loginLong"] = "l'login est trop long";
+        //MODIF if (sizeof($login) > 100) {
+        if (strlen($login) > 100) {
+            $return["loginLong"] = "le login est trop long";
             $ok = false;
         }
 
-        if (sizeof($pass) > 100) {
+        //MODIF if (sizeof($pass) > 100) {
+        if (strlen ($pass) > 100) {
             $return["passLong"] = "le mot de pass est trop long";
             $ok = false;
         }
@@ -68,7 +70,8 @@ if (isset($_POST["nombdd"])) {
         if (!preg_match("/^[a-zA-Z'\- ]+$/", $_POST["nombdd"])) {
             $return["Nom"] = "le Nom n'est pas valid";
             $nom = NULL;
-        } else if (sizeof($nom) > 50) {
+        //MODIF } else if (sizeof($nom) > 50) {
+        } else if (strlen($nom) > 50) {
             $return["Nom"] = "le Nom est trop long";
             $ok = false;
         }
@@ -85,7 +88,8 @@ if (isset($_POST["prenombdd"])) {
         if (!preg_match("/^[a-zA-Z'\- ]+$/", $_POST["prenombdd"])) {
             $return["Prenom"] = "le Prénom n'est pas valid";
             $prenom = NULL;
-        } else if (sizeof($prenom) > 50) {
+        //MODIF } else if (sizeof($prenom) > 50) {
+        } else if (strlen($prenom) > 50) {
             $return["Prenom"] = "le Prénom est trop long";
             $ok = false;
         }
@@ -99,7 +103,8 @@ if (isset($_POST["adressebdd"])) {
         $adresse = NULL;
     } else {
         $adresse = mysqli_real_escape_string($mysqli, $_POST["adressebdd"]);
-        if (sizeof($adresse) > 500) {
+        //MODIF if (sizeof($adresse) > 500) {
+        if (strlen($adresse) > 500) {
             $return["Adresse"] = "L'adresse n'est pas valide";
             $ok = false;
         }
@@ -114,7 +119,8 @@ if (isset($_POST["villebdd"])) {
         $ville = NULL;
     } else {
         $ville = mysqli_real_escape_string($mysqli, $_POST["villebdd"]);
-        if (sizeof($ville) > 50) {
+        //MODIF if (sizeof($ville) > 50) {
+        if (strlen($ville) > 50) {
             $return["ville"] = "La ville n'est pas valide";
             $ok = false;
         }
@@ -128,7 +134,8 @@ if (isset($_POST["codepostalbdd"])) {
         $codepostal = NULL;
     } else {
         $codepostal = mysqli_real_escape_string($mysqli, $_POST["codepostalbdd"]);
-        if (sizeof($codepostal) > 50) {
+        //MODIF if (sizeof($codepostal) > 50) {
+        if (strlen($codepostal) > 50) {
             $return["codepostal"] = "le code postal n'est pas valid";
             $ok = false;
         }
@@ -142,7 +149,8 @@ if (isset($_POST["datebdd"])) {
         $date = NULL;
     } else {
         $date = mysqli_real_escape_string($mysqli, $_POST["datebdd"]);
-        if (sizeof($date) > 50) {
+        //MODIF (sizeof($date) > 50) {
+        if (strlen($date) > 50) {
             $return["date"] = "la date n'est pas valid";
             $ok = false;
         }
@@ -225,7 +233,7 @@ if ($ok === true) {
     $mysqli_bind_param = mysqli_stmt_bind_param($stmt, "sssssssssss", $login, $email, $hashed_pass, $nom, $prenom, $date, $sexe, $adresse, $codepostal, $ville, $telephone);
 
     // Exécution de la requête
-    mysqli_stmt_execute($stmt) or die("Impossible de creer un compte dans ce moment<br>");
+    mysqli_stmt_execute($stmt) or die("Impossible de creer un compte pour le moment<br>");
     mysqli_stmt_close($stmt);
 
     $_SESSION["login"] = $login;

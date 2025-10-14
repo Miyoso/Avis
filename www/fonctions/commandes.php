@@ -8,7 +8,7 @@
 		mysqli_select_db($mysqli,$base) or die("Impossible de sélectionner la base : $base");
 		
 		echo "<h2>Commandes</h2><br/>";
-		$result = query($mysqli,'select id_com,(select prenom from users where users.login = commande.id_client limit 1) as prenom,(select nom from users where users.login = commande.id_client limit 1) as nom,id_prod,date,ADRESSE,cp,ville from commande');
+		$result = query($mysqli,'select id_com,(select prenom from USERS where USERS.login = COMMANDES.id_client limit 1) as prenom,(select nom from USERS where USERS.login = COMMANDES.id_client limit 1) as nom,id_prod,date,ADRESSE,cp,ville from COMMANDES');
 		if(mysqli_num_rows($result)<=0){
 			echo "Aucun enregistrement dans la base de données";
 		}

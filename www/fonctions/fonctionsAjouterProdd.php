@@ -26,8 +26,10 @@
 		include("../Fonctions.inc.php");
 		include("../Donnees.inc.php");
 
-		$mysqli=mysqli_connect($host,$user,$pass) or die("Problème de création de la base :".mysqli_error());
-		mysqli_select_db($mysqli,$base) or die("Impossible de sélectionner la base : $base");
+		//MODIF $mysqli=mysqli_connect($host,$user,$pass) or die("Problème de création de la base :".mysqli_error());
+		$mysqli=mysqli_connect($host,$user,$pass) or die("Une erreur est survenue.");
+        //MODIF mysqli_select_db($mysqli,$base) or die("Impossible de sélectionner la base : $base");
+		mysqli_select_db($mysqli,$base) or die("Une erreur est survenue.");
 
 		if(isset($_POST["libelle"]) && isset($_POST["prix"]) && isset($_POST["descriptif"])){
 			
@@ -52,7 +54,7 @@
 
                     //Propal corr
 
-                    $stmt = $mysqli->prepare("REPLACE INTO `produits` (`Libelle`,`Prix`,`descriptif`,`photo`) VALUES (?, ?, ?, ?)");
+                    $stmt = $mysqli->prepare("REPLACE INTO `PRODUITS` (`Libelle`,`Prix`,`descriptif`,`photo`) VALUES (?, ?, ?, ?)");
                     if ($stmt === false) {
                         error_log("Erreur préparation REPLACE produits: " . $mysqli->error);
                         die("Une erreur est survenue. Merci de réessayer plus tard.");
