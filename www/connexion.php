@@ -26,7 +26,7 @@
 		<script src="js/skel-layers.min.js"></script>
 		<script src="js/init.js"></script>
 		<script>
-			$().ready(function() {
+			/* $().ready(function() {
 				$('#submit').click(function (){
 				$.ajax({
 					type: 'POST',
@@ -34,12 +34,38 @@
 					data: {login : $('#login').val(), password : $('#password').val()},
 					success: function(data){
 								alert(data);
-								location.reload();						
+								location.reload();
 					},
 				});
 			});
-			});
-		</script>
+			}); $/
+			 */
+            $(document).ready(function() {
+                $('#submit').click(function (e){
+                    e.preventDefault(); // Empêche le vrai submit du formulaire
+                    $.ajax({
+                        type: 'POST',
+                        url: 'fonctions/fonctionsLogin.php',
+                        data: {
+                            login: $('#login').val(),
+                            password: $('#password').val()
+                        },
+                        success: function(data){
+                            if (data === 'OK') {
+                                location.reload(); // recharge la page → PHP relira $_SESSION
+                            } else {
+                                alert(data); // affiche message d’erreur
+                                location.reload();
+                            }
+                        },
+                        error: function(){
+                            alert("Erreur lors de la connexion.");
+                        }
+                    });
+                });
+            });
+
+        </script>
 		<noscript>
 			<link rel="stylesheet" href="css/skel.css" />
 			<link rel="stylesheet" href="css/style.css" />
@@ -78,22 +104,22 @@
 					<div class="row">
 						<div class="3u">
 							<a href="#" class="image"><img src="images/placeholder.png" alt=""></a>
-							<h3>Molly Millions</h3>
+							<h3>Pierre Christophe Zettl</h3>
 							<p>In posuere eleifend odio quisque semper augue wisi ligula.</p>
 						</div>
 						<div class="3u">
 							<a href="#" class="image"><img src="images/placeholder.png" alt=""></a>
-							<h3>Henry Dorsett Case</h3>
+							<h3>Andrew Marbach</h3>
 							<p>In posuere eleifend odio quisque semper augue wisi ligula.</p>
 						</div>
 						<div class="3u">
 							<a href="#" class="image"><img src="images/placeholder.png" alt=""></a>
-							<h3>Willis Corto</h3>
+							<h3>Mohamed Krouchi</h3>
 							<p>In posuere eleifend odio quisque semper augue wisi ligula.</p>
 						</div>
 						<div class="3u">
 							<a href="#" class="image"><img src="images/placeholder.png" alt=""></a>
-							<h3>Linda Lee</h3>
+							<h3>Yvan Castro</h3>
 							<p>In posuere eleifend odio quisque semper augue wisi ligula.</p>
 						</div>
 					</div>

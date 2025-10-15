@@ -1,7 +1,9 @@
 <?php
 session_start();
-if(isset($_COOKIE["panier"]) && isset($_SESSION["login"]) && isset($_POST["num"]) && isset($_POST["code"])){
-    if(!empty($_POST["num"]) || !empty($_POST["code"])){
+
+if(isset($_COOKIE["panier"]) && isset($_SESSION["login"]) && isset($_POST["num"]) && isset($_POST["code"])) {
+    if(!empty($_POST["num"]) || !empty($_POST["code"])) {
+
         $panier = json_decode($_COOKIE["panier"]);
         include("Parametres.php");
         include("Fonctions.inc.php");
@@ -12,16 +14,12 @@ if(isset($_COOKIE["panier"]) && isset($_SESSION["login"]) && isset($_POST["num"]
 
         // Corr Propal
 
-
         $mysqli = @mysqli_connect($host, $user, $pass, $base);
         if (!$mysqli) {
-
             error_log("MySQL connect error: " . mysqli_connect_error() . " (host: {$host}, db: {$base})");
-
             die("Oups — problème de connexion à la base. Merci de réessayer plus tard.");
         }
-
-        mysqli_select_db($mysqli,$base) or die("Impossible de sélectionner la base : $base");
+        mysqli_select_db($mysqli, $base) or die("Impossible de sélectionner la base : $base");
 
         /* -----------------------------
            ligne vulnérable (commentée)
@@ -31,14 +29,14 @@ if(isset($_COOKIE["panier"]) && isset($_SESSION["login"]) && isset($_POST["num"]
 
         // Proposition corr
 
+        /* TEST
         $sql = "REPLACE INTO COMMANDES (ID_PROD, ID_CLIENT, DATE, NOM, PRENOM, ADRESSE, CP, VILLE, TELEPHONE) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $mysqli->prepare($sql);
         if ($stmt === false) {
             error_log("Erreur préparation REPLACE commande: " . $mysqli->error);
 
             die("Oups — impossible de finaliser la commande pour le moment. Merci de réessayer.");
-        }
-
+        }*/
 
         $login = isset($_SESSION["login"]) ? $_SESSION["login"] : '';
         $dateNow = date('d/m/Y');
@@ -50,43 +48,100 @@ if(isset($_COOKIE["panier"]) && isset($_SESSION["login"]) && isset($_POST["num"]
         $telephone = isset($_SESSION["TELEPHONE"]) ? $_SESSION["TELEPHONE"] : '';
 
 
-        $idProd = 0;
-        if (!$stmt->bind_param('isssssiss', $idProd, $login, $dateNow, $nom, $prenom, $adresse, $cp, $ville, $telephone)) {
-            error_log("Erreur bind_param REPLACE commande: " . $stmt->error);
-            $stmt->close();
-            die("Oups — impossible de traiter le panier pour le moment.");
+        $sqlCommande = "INSERT INTO COMMANDES 
+            (ID_CLIENT, DATE, NOM, PRENOM, ADRESSE, CP, VILLE, TELEPHONE) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmtCommande = $mysqli->prepare($sqlCommande);
+        if(!$stmtCommande) {
+            error_log("Erreur préparation INSERT commande: " . $mysqli->error);
+            die("Oups — impossible de finaliser la commande pour le moment.");
         }
 
-        foreach($panier as $item){
+        $stmtCommande->bind_param('ssssssss', $login, $dateNow, $nom, $prenom, $adresse, $cp, $ville, $telephone);
+        if(!$stmtCommande->execute()) {
+            error_log("Erreur execution INSERT commande: " . $stmtCommande->error);
+            $stmtCommande->close();
+            die("Oups — une erreur est survenue lors de l'enregistrement de la commande.");
+        }
 
+        $idCom = $mysqli->insert_id;
+        if ($idCom <= 0) {
+            die('Erreur : impossible de créer la commande.');
+        }
+        $stmtCommande->close();
+
+        // on met dans detail aussi
+        foreach($panier as $item) {
             $idProd = intval($item);
+            $quantite = 1;
 
+            $stmtCheckProd = mysqli_prepare($mysqli, "SELECT ID_PROD FROM PRODUITS WHERE ID_PROD = ?");
+            mysqli_stmt_bind_param($stmtCheckProd, "i", $idProd);
+            mysqli_stmt_execute($stmtCheckProd);
+            $resCheckProd = mysqli_stmt_get_result($stmtCheckProd);
+            mysqli_stmt_close($stmtCheckProd);
 
-            if (!$stmt->execute()) {
-
-                error_log("Erreur execution REPLACE commande: " . $stmt->error . " -- ID_PROD: " . $idProd . " -- Login: " . $login);
-
-                $stmt->close();
-                die("Oups — une erreur est survenue lors de l'enregistrement de la commande. Merci de réessayer.");
+            if (!$resCheckProd || mysqli_num_rows($resCheckProd) === 0) {
+                continue; // produit introuvable
             }
+
+            $stmtDetail = mysqli_prepare($mysqli, "INSERT INTO DETAIL (ID_COM, ID_PROD, QUANTITE) VALUES (?, ?, ?) 
+                                        ON DUPLICATE KEY UPDATE QUANTITE = QUANTITE + ?");
+            mysqli_stmt_bind_param($stmtDetail, "iiii", $idCom, $idProd, $quantite, $quantite);
+            if(!$stmtDetail->execute()) {
+                error_log("Erreur execution DETAIL: " . $stmtDetail->error . " -- ID_PROD: $idProd -- ID_COM: $idCom");
+                mysqli_stmt_close($stmtDetail);
+                die("Oups — une erreur est survenue lors de l'enregistrement du détail de la commande.");
+            }
+            mysqli_stmt_close($stmtDetail);
         }
 
+        // ici on affiche
+        $detail = [];
+        $stmt = mysqli_prepare($mysqli, "SELECT d.ID_PROD, d.QUANTITE, p.LIBELLE, p.PRIX 
+                                        FROM DETAIL d 
+                                        JOIN PRODUITS p ON d.ID_PROD = p.ID_PROD 
+                                        WHERE d.ID_COM = ?");
+        mysqli_stmt_bind_param($stmt, "i", $idCom);
+        mysqli_stmt_execute($stmt);
+        $res = mysqli_stmt_get_result($stmt);
 
-        $stmt->close();
+        while($row = mysqli_fetch_assoc($res)) {
+            $detail[] = [
+                'id_prod'  => intval($row['ID_PROD']),
+                'quantite' => intval($row['QUANTITE']),
+                'libelle'  => $row['LIBELLE'],
+                'prix'     => floatval($row['PRIX'])
+            ];
+        }
+        mysqli_stmt_close($stmt);
 
-        setcookie("panier", "", time()-3600,"/");
+        // total
+        $total = 0;
+        foreach($detail as $article) {
+            $total += $article['prix'] * $article['quantite'];
+        }
+
+        $_SESSION['dernier_detail_commande'] = [
+            'articles' => $detail,
+            'total'    => $total
+        ];
+
+        setcookie("panier", "", time()-3600, "/");
         mysqli_close($mysqli);
-        $_SESSION["paiement"] = "opération réussie";
+
+        $_SESSION["paiement"] = "Opération réussie !";
         $_SESSION["color"] = "green";
-    }else{
-        $_SESSION["paiement"] = "donnees incorrectes <br/> Veuillez essayer de nouveau";
+
+    } else {
+        $_SESSION["paiement"] = "Données incorrectes. Veuillez réessayer.";
         $_SESSION["color"] = "red";
     }
-
-}else{
-    $_SESSION["paiement"] = "donnees incorrectes <br/> Veuillez essayer de nouveau";
+} else {
+    $_SESSION["paiement"] = "Données incorrectes. Veuillez réessayer.";
     $_SESSION["color"] = "red";
 }
 
-header('location: panier.php');
+header('Location: panier.php');
+exit;
 ?>

@@ -73,7 +73,6 @@ query($mysqli, "CREATE TABLE IF NOT EXISTS FAVS (
 
 query($mysqli, 'CREATE TABLE IF NOT EXISTS COMMANDES (
   `ID_COM` bigint(20) NOT NULL AUTO_INCREMENT,
-  `ID_PROD` int(11) NOT NULL,
   `ETAT` int(1), # NOT NULL pas possible tant que les fonctions plus avancées du site ne sont pas faites
   `ID_CLIENT` varchar(200) NOT NULL,
   `DATE` varchar(40) NOT NULL,
@@ -85,7 +84,7 @@ query($mysqli, 'CREATE TABLE IF NOT EXISTS COMMANDES (
   `VILLE` varchar(80), # NOT NULL pas possible tant que les fonctions plus avancées du site ne sont pas faites
   `TELEPHONE` varchar(10), # NOT NULL pas possible tant que les fonctions plus avancées du site ne sont pas faites
   PRIMARY KEY (`ID_COM`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;');
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;');
 
 
 query($mysqli, 'CREATE TABLE IF NOT EXISTS HIERARCHIE (
@@ -105,7 +104,21 @@ query($mysqli, 'CREATE TABLE IF NOT EXISTS APPARTIENT (
   `id_prod` int(11) NOT NULL,
   `id_rub` int(11) NOT NULL,
   PRIMARY KEY (`id_prod`,`id_rub`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;');
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;');
+
+query($mysqli, 'CREATE TABLE IF NOT EXISTS DETAIL (
+  ID_COM BIGINT(20) NOT NULL,
+  ID_PROD INT(11) NOT NULL,
+  QUANTITE INT NOT NULL DEFAULT 1,
+  PRIMARY KEY (ID_COM, ID_PROD),
+  FOREIGN KEY (ID_COM) REFERENCES COMMANDES(ID_COM)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE,
+  FOREIGN KEY (ID_PROD) REFERENCES PRODUITS(ID_PROD)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+');
 
 $rub = 13;
 $num = 13;

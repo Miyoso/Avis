@@ -30,8 +30,11 @@
 		$mysqli=mysqli_connect($host,$user,$pass) or die("Une erreur est survenue.");
         //MODIF mysqli_select_db($mysqli,$base) or die("Impossible de sélectionner la base : $base");
 		mysqli_select_db($mysqli,$base) or die("Une erreur est survenue.");
+        // ESSAI
+        $mysqli->set_charset('utf8mb4');
+        $mysqli->query("SET NAMES 'utf8mb4' COLLATE 'utf8mb4_0900_ai_ci'");
 
-		if(isset($_POST["libelle"]) && isset($_POST["prix"]) && isset($_POST["descriptif"])){
+        if(isset($_POST["libelle"]) && isset($_POST["prix"]) && isset($_POST["descriptif"])){
 			
 			$ok = true;
 			if(!preg_match('/^([A-Za-z]{0,80}$)/', $_POST["libelle"])){
@@ -54,7 +57,7 @@
 
                     //Propal corr
 
-                    $stmt = $mysqli->prepare("REPLACE INTO `PRODUITS` (`Libelle`,`Prix`,`descriptif`,`photo`) VALUES (?, ?, ?, ?)");
+                    $stmt = $mysqli->prepare("REPLACE INTO `PRODUITS` (`LIBELLE`,`PRIX`,`DESCRIPTIF`,`PHOTO`) VALUES (?, ?, ?, ?)");
                     if ($stmt === false) {
                         error_log("Erreur préparation REPLACE produits: " . $mysqli->error);
                         die("Une erreur est survenue. Merci de réessayer plus tard.");
@@ -77,8 +80,8 @@
 
                     $stmt->close();
 
-					query($mysqli,'insert into appartient (id_prod,id_rub) values ((select max(id_prod) from PRODUITS),(select id_rub from rubrique where libelle_rub = \''.$rubrique.'\'))');
-					echo "Engretrement reussi";
+					query($mysqli,'insert into APPARTIENT (id_prod,id_rub) values ((select max(id_prod) from PRODUITS),(select id_rub from RUBRIQUES where libelle_rub = \''.$rubrique.'\'))');
+                    echo "Engretrement reussi";
 				}
 				else
 				{

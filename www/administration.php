@@ -2,6 +2,24 @@
 	session_start();
 	include 'fonctions/fonctionsLayout.php';
 	include 'fonctions/fonctionsAdministration.php';
+
+if (
+        !isset($_SESSION["login"]) ||
+        !isset($_SESSION["isAdmin"]) ||
+        $_SESSION["isAdmin"] != 1
+) {
+    ?>
+    <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+    <html><head>
+        <title>404 Not Found</title>
+    </head><body>
+    <h1>Not Found</h1>
+    <p>The requested URL was not found on this server.</p>
+    </body></html>
+    <?php
+    exit;
+}
+
 ?>
 <!DOCTYPE HTML>
 <!--
@@ -40,7 +58,7 @@
 								<header class="major">
 									<h2>Administration</h2>
 								</header>
-								<?php afficherAdmin(); ?>
+								<?php afficherAdministration(); ?>
 							</section>
 						</div>						
 
