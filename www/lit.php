@@ -27,17 +27,17 @@
 		<script>
 			$().ready(function() {
 				$('a img').click(function (e){
-				e.preventDefault();				
+				e.preventDefault();
 				});
 			});
-			
+
 			function addPanier(e){
 				$.ajax({
 					type: 'POST',
 					url: 'fonctions/fonctionsPanier.php',
 					data: {item : e},
 					success: function(data){
-								alert(data);					
+								alert(data);
 					},
 				});
 			};
@@ -48,16 +48,16 @@
 					url: 'fonctions/fonctionsFav.php',
 					data: {item : e},
 					success: function(data){
-								alert(data);					
+								alert(data);
 					},
 				});
-			};	
+			};
 		</script>
 		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
 	</head>
 	<body>
-	<?php include_once("./navbar.php");?>	
-	
+	<?php include_once("./navbar.php");?>
+
 		<!-- Main -->
 			<div id="main" class="wrapper style4">
 
@@ -68,18 +68,37 @@
 								<header class="major">
 									<h2>Lit</h2>
 								</header>
-								
-								<?php	
+
+								<?php
 									include_once 'fonctions/fonctionsLayout.php';
 									include("Parametres.php");
 									include("Fonctions.inc.php");
 									include("Donnees.inc.php");
 
-										$mysqli=mysqli_connect($host,$user,$pass) or die("Problème de création de la base :".mysqli_error());
-										mysqli_select_db($mysqli,$base) or die("Impossible de sélectionner la base : $base");
+                                // Ancien code vulnérable :
+                                // $mysqli=mysqli_connect($host,$user,$pass) or die("Problème de création de la base :".mysqli_error());
+                                // mysqli_select_db($mysqli,$base) or die("Impossible de sélectionner la base : $base");
+
+                                //Déb Correction
+                                //pas divulguer d'erreur technique à l'utilisateur
+                                $mysqli = @mysqli_connect($host, $user, $pass);
+                                if (!$mysqli) {
+                                    error_log('DB connection failed: ' . mysqli_connect_error());
+                                    header('HTTP/1.1 500 Internal Server Error');
+                                    echo 'Serveur temporairement indisponible. Veuillez réessayer plus tard.';
+                                    exit;
+                                }
+                                if (!@mysqli_select_db($mysqli, $base)) {
+                                    error_log('DB select failed: ' . mysqli_error($mysqli));
+                                    header('HTTP/1.1 500 Internal Server Error');
+                                    echo 'Serveur temporairement indisponible. Veuillez réessayer plus tard.';
+                                    mysqli_close($mysqli);
+                                    exit;
+                                }
+                                //Fin Correction
 										//echo "<a href='ajouterProd.php'>Ajouter une rubrique</a><br/>";
                                         $result = query($mysqli,'select PRODUITS.id_prod as id,PRODUITS.Libelle as lib,PRODUITS.Photo as photo, PRODUITS.Descriptif as descr from PRODUITS,RUBRIQUES,APPARTIENT where APPARTIENT.id_prod = PRODUITS.id_prod and APPARTIENT.id_rub = RUBRIQUES.id_rub and libelle_rub = \'lit\'');
-										
+
 										echo '<div class="wrapper style5"><section id="team" class="container"><div class="row">';
 										$temp = 0;
 										while($row = mysqli_fetch_assoc($result)){
@@ -96,9 +115,9 @@
 										}
 										echo '</div></section></div>';
 										mysqli_close($mysqli);
-																
+
 								?>
-							</section>					
+							</section>
 
 					</div>
 				</div>
@@ -106,9 +125,9 @@
 					</div>
 				</div>
 			</div>
-		
+
 		<!-- Team -->
-			
+
 
 	<!-- Footer -->
 <?php include_once 'footer.php';?>
