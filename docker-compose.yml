@@ -9,7 +9,8 @@ services:
     container_name: taupe-meubles-app
 
     volumes:
-      - ./www:/var/www/html #TODO remettre le :ro # Montre le code source en lecture seule
+      - ./www:/var/www/html #TODO remettre le :ro # Montre le code source en lecture seule`
+      - ./security.conf:/etc/apache2/conf-enabled/security.conf:ro
 
     ports:
       - "8080:80"

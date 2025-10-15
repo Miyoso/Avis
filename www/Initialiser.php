@@ -74,10 +74,10 @@ query($mysqli, "CREATE TABLE IF NOT EXISTS FAVS (
 query($mysqli, 'CREATE TABLE IF NOT EXISTS COMMANDES (
   `ID_COM` bigint(20) NOT NULL AUTO_INCREMENT,
   `ID_PROD` int(11) NOT NULL,
-  `ETAT` int(1) NOT NULL,
+  `ETAT` int(1), # NOT NULL ne nous sert pas
   `ID_CLIENT` varchar(200) NOT NULL,
   `DATE` varchar(40) NOT NULL,
-  `CIVILITE` varchar(4) NOT NULL,
+  `CIVILITE` varchar(4), # NOT NULL ne nous sert pas
   `NOM` varchar(40) NOT NULL,
   `PRENOM` varchar(40) NOT NULL,
   `ADRESSE` varchar(160) NOT NULL,
