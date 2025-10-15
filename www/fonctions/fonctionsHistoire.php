@@ -5,8 +5,28 @@
 		include("Fonctions.inc.php");
 		include("Donnees.inc.php");
 
-		$mysqli=mysqli_connect($host,$user,$pass) or die("Problème de création de la base :".mysqli_error());
-		mysqli_select_db($mysqli,$base) or die("Impossible de sélectionner la base : $base");
+        // Ancien code vulnérable :
+        // $mysqli=mysqli_connect($host,$user,$pass) or die("Problème de création de la base :".mysqli_error());
+        // mysqli_select_db($mysqli,$base) or die("Impossible de sélectionner la base : $base");
+
+        // Début Correction
+        $mysqli = @mysqli_connect($host, $user, $pass);
+        if (!$mysqli) {
+            // log technique pour l'admin/dev
+            error_log('DB connection failed: ' . mysqli_connect_error());
+            // message générique côté client
+            echo 'Serveur temporairement indisponible. Veuillez réessayer plus tard.';
+            return;
+        }
+
+        if (!@mysqli_select_db($mysqli, $base)) {
+            error_log('DB select failed: ' . mysqli_error($mysqli));
+            echo 'Serveur temporairement indisponible. Veuillez réessayer plus tard.';
+            mysqli_close($mysqli);
+            return;
+        }
+        // Fin Correction
+
 		$result = query($mysqli,'select id_com, id_client, (select prenom from USERS where USERS.login = COMMANDES.id_client limit 1) as prenom,(select nom from USERS where USERS.login = COMMANDES.id_client limit 1) as nom,id_prod,date,ADRESSE,cp,ville from COMMANDES where  id_client = \''.$_SESSION["login"].'\'');
 		$num = mysqli_num_rows($result);
 			if($num > 0){
