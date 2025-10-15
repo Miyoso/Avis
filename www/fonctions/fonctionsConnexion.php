@@ -64,6 +64,8 @@ function afficherConnexion()
 {	
 	if(isset($_GET['source']) && $_GET['source']=='livraison')
 	{
+        //Cro Echappement
+        $source = htmlspecialchars($_GET['source'], ENT_QUOTES, 'UTF-8');
 		echo '<form action="connexion.php?source="'.$_GET['source'].'" method="post"><div>';
 	}
 	else echo '<div>';
