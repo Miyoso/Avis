@@ -1,6 +1,14 @@
-<FilesMatch "\.php$" >
-    SetEnvIf X-Requested-With "XMLHttpRequest" ajax
-      Order Deny,Allow
-      Deny from all
-      Allow from env=ajax
+# Empêcher l'accès direct aux fichiers PHP sauf pour les requêtes AJAX
+<FilesMatch "\.php$">
+  SetEnvIf X-Requested-With "XMLHttpRequest" ajax
+  Order Deny,Allow
+  Deny from all
+  Allow from env=ajax
 </FilesMatch>
+
+# Interdire tout accès direct aux fichiers du dossier fonctions
+Order allow,deny
+Deny from all
+
+# Désactiver le listing des dossiers
+Options -Indexes
