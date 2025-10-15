@@ -5,8 +5,31 @@
 		  include("Parametres.php");
 		  include("Fonctions.inc.php");
 		  include("Donnees.inc.php");
-		  $mysqli=mysqli_connect($host,$user,$pass) or die("Problème de création de la base :".mysqli_error());
-		  mysqli_select_db($mysqli,$base) or die("Impossible de sélectionner la base : $base");
+
+
+        // Ancien code vulnérable :
+        // $mysqli=mysqli_connect($host,$user,$pass) or die("Problème de création de la base :".mysqli_error());
+        // mysqli_select_db($mysqli,$base) or die("Impossible de sélectionner la base : $base")
+
+        // Déb Correction
+        //sans fuite d'erreur
+        $mysqli = @mysqli_connect($host, $user, $pass);
+        if (!$mysqli) {
+            
+            error_log('DB connection failed: ' . mysqli_connect_error());
+            // Message générique pour l'utilisateur
+            echo '<p>Serveur temporairement indisponible. Veuillez réessayer plus tard.</p>';
+
+            exit;
+        }
+        if (!@mysqli_select_db($mysqli, $base)) {
+            error_log('DB select failed: ' . mysqli_error($mysqli));
+            echo '<p>Serveur temporairement indisponible. Veuillez réessayer plus tard.</p>';
+            mysqli_close($mysqli);
+            exit;
+        }
+
+
 				$str = "SELECT LOGIN,EMAIL,PASS,NOM,PRENOM,DATE,SEXE,ADRESSE,CODEP,VILLE,TELEPHONE FROM USERS WHERE LOGIN = '".$_SESSION["login"]."'";
 				$result = query($mysqli,$str) or die("Impossible de se connecter");
 				$row = mysqli_fetch_assoc($result);
