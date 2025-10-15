@@ -74,16 +74,16 @@ query($mysqli, "CREATE TABLE IF NOT EXISTS FAVS (
 query($mysqli, 'CREATE TABLE IF NOT EXISTS COMMANDES (
   `ID_COM` bigint(20) NOT NULL AUTO_INCREMENT,
   `ID_PROD` int(11) NOT NULL,
-  `ETAT` int(1), # NOT NULL ne nous sert pas
+  `ETAT` int(1), # NOT NULL pas possible tant que les fonctions plus avancées du site ne sont pas faites
   `ID_CLIENT` varchar(200) NOT NULL,
   `DATE` varchar(40) NOT NULL,
-  `CIVILITE` varchar(4), # NOT NULL ne nous sert pas
-  `NOM` varchar(40) NOT NULL,
-  `PRENOM` varchar(40) NOT NULL,
-  `ADRESSE` varchar(160) NOT NULL,
-  `CP` int(11) NOT NULL,
-  `VILLE` varchar(80) NOT NULL,
-  `TELEPHONE` varchar(10) NOT NULL,
+  `CIVILITE` varchar(4), # NOT NULL pas possible tant que les fonctions plus avancées du site ne sont pas faites
+  `NOM` varchar(40), # NOT NULL pas possible tant que les fonctions plus avancées du site ne sont pas faites
+  `PRENOM` varchar(40), # NOT NULL pas possible tant que les fonctions plus avancées du site ne sont pas faites
+  `ADRESSE` varchar(160), # NOT NULL pas possible tant que les fonctions plus avancées du site ne sont pas faites
+  `CP` int(11), # NOT NULL pas possible tant que les fonctions plus avancées du site ne sont pas faites
+  `VILLE` varchar(80), # NOT NULL pas possible tant que les fonctions plus avancées du site ne sont pas faites
+  `TELEPHONE` varchar(10), # NOT NULL pas possible tant que les fonctions plus avancées du site ne sont pas faites
   PRIMARY KEY (`ID_COM`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;');
 

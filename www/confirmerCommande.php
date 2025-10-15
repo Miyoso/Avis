@@ -51,7 +51,7 @@ if(isset($_COOKIE["panier"]) && isset($_SESSION["login"]) && isset($_POST["num"]
 
 
         $idProd = 0;
-        if (!$stmt->bind_param('issssssss', $idProd, $login, $dateNow, $nom, $prenom, $adresse, $cp, $ville, $telephone)) {
+        if (!$stmt->bind_param('isssssiss', $idProd, $login, $dateNow, $nom, $prenom, $adresse, $cp, $ville, $telephone)) {
             error_log("Erreur bind_param REPLACE commande: " . $stmt->error);
             $stmt->close();
             die("Oups — impossible de traiter le panier pour le moment.");
