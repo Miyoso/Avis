@@ -57,8 +57,6 @@ if(isset($_POST["item"]) && isset($_SESSION["login"])){
         $stmt->close();
         return $affected; // INSERT / DELETE / UPDATE
     }
-
-   
     $item = intval($_POST["item"]);
     $login = $_SESSION["login"];
 
@@ -72,19 +70,21 @@ if(isset($_POST["item"]) && isset($_SESSION["login"])){
     // nouveau code sec
     $sqlCheck = "SELECT * FROM FAVS WHERE id_prod = ? AND login = ?";
     $result = safe_query($mysqli, $sqlCheck, 'is', [$item, $login]);
-
     if ($result && $result->num_rows > 0 && isset($_POST["x"])) {
         //Ancien code vul
         // query($mysqli,'delete from favs where id_prod = '.$_POST["item"].' and LOGIN = \''.$_SESSION["login"].'\'');
         //Nouveau code sec
         safe_query($mysqli, "DELETE FROM FAVS WHERE id_prod = ? AND login = ?", 'is', [$item, $login]);
         echo 'delete set';
-    } else {
+    } else if (!isset($_POST["x"])) { //ajout de la verfication du parametre x
         //Ancien code vulne
         // query($mysqli,$str);
         //Nouveau code sec
         safe_query($mysqli, "INSERT IGNORE INTO FAVS (login, id_prod) VALUES (?, ?)", 'si', [$login, $item]);
         echo 'set';
+    }
+    else { //si le favoris n'existe pas et que x est defini
+        echo 'delete set';
     }
 
     mysqli_close($mysqli);

@@ -31,13 +31,14 @@
         $str = "SELECT LOGIN,EMAIL,PASS,NOM,PRENOM,DATE,SEXE,ADRESSE,CODEP,VILLE,TELEPHONE FROM USERS WHERE LOGIN = '".$_SESSION["login"]."'";
 				$result = query($mysqli,$str) or die("Impossible de se connecter");
 				$row = mysqli_fetch_assoc($result);
+
 				if(is_null($row["LOGIN"])){$login = "";}else{$login = $row["LOGIN"];}
 				if(is_null($row["EMAIL"])){$email = "";}else{$email = $row["EMAIL"];}
 				if(is_null($row["NOM"])){$nom = "";}else{$nom = $row["NOM"];}
 				if(is_null($row["PRENOM"])){$prenom = "";}else{$prenom = $row["PRENOM"];}
 				if(is_null($row["DATE"])){$date = "";}else{$date = $row["DATE"];}
 				if(is_null($row["TELEPHONE"])){$telephone = "";}else if((int)$row["TELEPHONE"] == 0){ $telephone = NULL;}else{$telephone = $row["TELEPHONE"];}
-				if(is_null($row["ADRESSE"])){$ADRESSEe = "";}else{$ADRESSEe = $row["ADRESSE"];}
+				if(is_null($row["ADRESSE"])){$adresse = "";}else{$adresse = $row["ADRESSE"];}
 				if(is_null($row["CODEP"])){$codepostal = "";}else{$codepostal = $row["CODEP"];}
 				if(is_null($row["VILLE"])){$ville = "";}else{$ville = $row["VILLE"];}
 				if(is_null($row["SEXE"])){$sexe = "";}else{$sexe = $row["SEXE"];}
@@ -107,7 +108,7 @@
 										</tr>
 										
 										<tr>
-											<td><p><strong>ADRESSEe</strong></p></td><td>".$ADRESSEe."</td>
+											<td><p><strong>Adresse</strong></p></td><td>".$adresse."</td>
 										</tr>
 										<tr>
 											<td><p><strong>Ville</strong></p></td><td>".$ville."</td>

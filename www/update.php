@@ -25,7 +25,7 @@ $row = mysqli_fetch_assoc($result);
 if ((isset($_POST["emailbdd"]) && empty($_POST["emailbdd"])) || !(isset($_POST["emailbdd"]))) {
     $email = $row["EMAIL"];
 } else {
-    if (trim(mysqli_real_escape_string($mysqli, $_POST["emailbdd"])) > 100) {
+    if (strlen(trim(mysqli_real_escape_string($mysqli, $_POST["emailbdd"]))) > 100) {
         $email = $row["EMAIL"];
     } else if (!filter_var(trim(mysqli_real_escape_string($mysqli, $_POST["emailbdd"])), FILTER_VALIDATE_EMAIL)) {
         $email = $row["EMAIL"];
@@ -37,7 +37,7 @@ if ((isset($_POST["emailbdd"]) && empty($_POST["emailbdd"])) || !(isset($_POST["
 if ((isset($_POST["passwordbdd"]) && empty($_POST["passwordbdd"])) || !(isset($_POST["passwordbdd"]))) {
     $pass = $row["PASS"];
 } else {
-    if (trim(mysqli_real_escape_string($mysqli, $_POST["passwordbdd"])) > 200) {
+    if (strlen(trim(mysqli_real_escape_string($mysqli, $_POST["passwordbdd"]))) > 200) {
         $pass = $row["PASS"];
     } else {
         $pass = trim(mysqli_real_escape_string($mysqli, $_POST["passwordbdd"]));
@@ -50,7 +50,7 @@ if ((isset($_POST["nombdd"]) && empty($_POST["nombdd"])) || !(isset($_POST["nomb
 } else {
     if (!preg_match("/^[a-zA-Z'\- ]+$/", $_POST["nombdd"])) {
         $prenom = $row["NOM"];
-    } else if (trim(mysqli_real_escape_string($mysqli, $_POST["nombdd"])) > 50) {
+    } else if (strlen(trim(mysqli_real_escape_string($mysqli, $_POST["nombdd"]))) > 50) {
         $prenom = $row["NOM"];
     } else {
         $nom = trim(mysqli_real_escape_string($mysqli, ($_POST["nombdd"])));
@@ -63,7 +63,7 @@ if ((isset($_POST["prenombdd"]) && empty($_POST["prenombdd"])) || !(isset($_POST
 } else {
     if (!preg_match("/^[a-zA-Z'\- ]+$/", $_POST["prenombdd"])) {
         $prenom = $row["PRENOM"];
-    } else if (trim(mysqli_real_escape_string($mysqli, $_POST["prenombdd"])) > 50) {
+    } else if (strlen(trim(mysqli_real_escape_string($mysqli, $_POST["prenombdd"]))) > 50) {
         $prenom = $row["PRENOM"];
     } else {
         $prenom = trim(mysqli_real_escape_string($mysqli, $_POST["prenombdd"]));
@@ -76,7 +76,7 @@ if ((isset($_POST["adressebdd"]) && empty($_POST["adressebdd"])) || !(isset($_PO
 } else {
     if (!preg_match("/^[a-zA-Z'\- ]+$/", $_POST["adressebdd"])) {
         $adresse = $row["ADRESSE"];
-    } else if (trim(mysqli_real_escape_string($mysqli, $_POST["adressebdd"])) > 500) {
+    } else if (strlen(trim(mysqli_real_escape_string($mysqli, $_POST["adressebdd"]))) > 500) {
         $adresse = $row["ADRESSE"];
     } else {
         $adresse = trim(mysqli_real_escape_string($mysqli, $_POST["adressebdd"]));
@@ -88,7 +88,7 @@ if ((isset($_POST["villebdd"]) && empty($_POST["villebdd"])) || !(isset($_POST["
 } else {
     if (!preg_match("/^[a-zA-Z'\- ]+$/", $_POST["villebdd"])) {
         $ville = $row["VILLE"];
-    } else if (trim(mysqli_real_escape_string($mysqli, $_POST["villebdd"])) > 50) {
+    } else if (strlen(trim(mysqli_real_escape_string($mysqli, $_POST["villebdd"]))) > 50) {
         $ville = $row["VILLE"];
     } else {
         $ville = trim(mysqli_real_escape_string($mysqli, $_POST["villebdd"]));
@@ -100,7 +100,7 @@ if ((isset($_POST["postalbdd"]) && empty($_POST["postalbdd"])) || !(isset($_POST
 } else {
     if (!preg_match("/^[0-9\- ]+/", $_POST["postalbdd"])) {
         $codepostal = $row["CODEP"];
-    } else if (trim(mysqli_real_escape_string($mysqli, $_POST["postalbdd"])) > 50) {
+    } else if (strlen(trim(mysqli_real_escape_string($mysqli, $_POST["postalbdd"]))) > 50) {
         $codepostal = $row["CODEP"];
     } else {
         $codepostal = trim(mysqli_real_escape_string($mysqli, $_POST["postalbdd"]));

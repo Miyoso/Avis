@@ -44,8 +44,9 @@
 					url: 'fonctions/fonctionsFav.php',
 					data: {item : e, x : '1'},
 					success: function(data){
-								alert(data);					
-					},
+								alert(data);
+                                location.reload(); // Ajout de cette ligne pour recharger la page
+                    },
 				});
 			};	
 		</script>

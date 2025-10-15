@@ -24,5 +24,6 @@ if (isset($_POST["item"]) && isset($_POST["pos"])) {
     } else {
         setcookie("panier", "", time() - 3600, "/");
     }
+    echo "Produit retiré au panier";
 }
 ?>

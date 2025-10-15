@@ -103,7 +103,7 @@
 										$temp = 0;
 										while($row = mysqli_fetch_assoc($result)){
 											echo '<div class="3u">';
-											echo '<a href="#" onclick="addPanier(\''.$row["id"]. "/></a>  <a href=" .$row["id"].'\')"><img src="images/favorite_add.png" style="height:40px;"/></a><br/>';
+                                            echo '<a href="#" onclick="addPanier(\''.$row["id"].'\')"><img src="images/13336.gif" style="height:30px;"/></a>  <a href="#" onclick="addFav(\''.$row["id"].'\')"><img src="images/favorite_add.png" style="height:40px;"/></a><br/>';
 											echo '<img src="'.$row["photo"].'" class="Image"/>';
 											echo '<h3 style="color:grey">'.$row["lib"].'</h3>';
 											echo '<p style="color:grey">'.$row["descr"].'</p>';
