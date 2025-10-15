@@ -20,8 +20,16 @@ function afficherBarreRecherche()
 function afficherCadrePanier()
 {	
 	echo '<a href="panier.php';
-	
-	if(isset($_GET['id_rub'])) echo '?id_rub='.$_GET['id_rub'];
+
+    // Ancien code vulnérable :
+    // if(isset($_GET['id_rub'])) echo '?id_rub='.$_GET['id_rub'];
+
+    // correction
+    if (isset($_GET['id_rub'])) {
+        $id_rub = htmlspecialchars($_GET['id_rub'], ENT_QUOTES, 'UTF-8');
+        echo '?id_rub=' . $id_rub;
+    }
+    // fin de correction
 	
 	echo '"><img src = "images/caddy.png" alt=""/><br />';
 	
