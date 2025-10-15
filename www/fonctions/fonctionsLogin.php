@@ -1,8 +1,8 @@
 <?php
 session_start ();
-include ("../Parametres.php");
-include ("../Fonctions.inc.php");
-include ("../Donnees.inc.php");
+include("../Parametres.php");
+include("../Fonctions.inc.php");
+include("../Donnees.inc.php");
 
 // Ancien code vulnérable :
 // $mysqli=mysqli_connect($host,$user,$pass) or die("Problème de création de la base :".mysqli_error());
