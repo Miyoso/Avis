@@ -1,18 +1,24 @@
 <?php
-// Ancien code vulnérable :
+// Ancien code (vulnérable) :
 // header('location: '.$_GET["p"]);
 
 // correction
-$redirect = $_GET["p"] ?? 'index.php'; // Valeur par défaut
+$target = $_GET['p'] ?? '';
 
-// Vérif que c'est un chemin relatif et pas une URL externe
 
-if (strpos($redirect, '/') === 0 && !str_contains($redirect, '://')) {
-    header('Location: ' . $redirect);
-} else {
-    // Redir par défaut sécurisée
-    header('Location: /index.php');
+$target = str_replace(["\r", "\n", "\0"], '', $target);
+
+// décoder pour éviter %2f%2f etc.
+$target = rawurldecode($target);
+
+// rapide vérif : que c'est pas un truc bizarre
+$parts = parse_url($target);
+if ($target !== '' && strpos($target, '/') === 0 && strpos($target, '//') !== 0 && !isset($parts['scheme']) && !isset($parts['host'])) {
+    header('Location: ' . $target, true, 302);
+    exit;
 }
-exit();
+
+
+header('Location: /', true, 302);
+exit;
 // fin de correction
-?>
