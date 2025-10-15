@@ -64,9 +64,13 @@ function afficherConnexion()
 {	
 	if(isset($_GET['source']) && $_GET['source']=='livraison')
 	{
-        //Cro Echappement
+        // Ancien code vulnérable :
+        // echo '<form action="connexion.php?source="'.$_GET['source'].'" method="post"><div>';
+
+        // correction
         $source = htmlspecialchars($_GET['source'], ENT_QUOTES, 'UTF-8');
-		echo '<form action="connexion.php?source="'.$_GET['source'].'" method="post"><div>';
+        echo '<form action="connexion.php?source='.$source.'" method="post"><div>';
+        // fin de correction
 	}
 	else echo '<div>';
 	
