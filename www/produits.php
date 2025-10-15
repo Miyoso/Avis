@@ -24,7 +24,10 @@
 			<link rel="stylesheet" href="css/skel.css" />
 			<link rel="stylesheet" href="css/style.css" />
 		</noscript>
-		<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+		<!-- <script src="https://code.jquery.com/jquery-1.10.2.js"></script> -->
+        <script src="https://code.jquery.com/jquery-1.10.2.js"
+                integrity="sha256-DW2s8VFiMxoMka0rKLa9qXyytNi9F6Nq3QkLpwWg4g8="
+                crossorigin="anonymous"></script>
 		<script>
 		function effacerProd(e){
 			$.ajax({

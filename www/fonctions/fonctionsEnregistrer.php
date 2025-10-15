@@ -30,12 +30,12 @@ $result["msg"] = "invalide";
 					  }
 					  
 				  
-				  if(sizeof($login)>100){
+				  if(strlen($login)>100){
 					  $return["loginLong"] = "l'login est trop long";
 					  $ok = false;
 				  }
 				  
-				  if(sizeof($pass)>100){
+				  if(strlen($pass)>100){
 					  $return["passLong"] = "le mot de pass est trop long";
 					  $ok = false;
 				  }
@@ -71,7 +71,7 @@ $result["msg"] = "invalide";
 				  if(!preg_match("/^[a-zA-Z'\- ]+$/",$_POST["nombdd"])){
 					  $return["Nom"] = "le Nom n'est pas valid";
 					  $nom = NULL;
-				  }else if(sizeof($nom)>50){
+				  }else if(strlen($nom)>50){
 					  $return["Nom"] = "le Nom est trop long";
 					   $ok = false;
 				  }
@@ -89,7 +89,7 @@ $result["msg"] = "invalide";
 				  if(!preg_match("/^[a-zA-Z'\- ]+$/",$_POST["prenombdd"])){
 					  $return["Prenom"] = "le Prénom n'est pas valid";
 					  $prenom = NULL;
-				  }else if(sizeof($prenom)>50){
+				  }else if(strlen($prenom)>50){
 					  $return["Prenom"] = "le Prénom est trop long";
 					   $ok = false;
 				  }
@@ -104,7 +104,7 @@ $result["msg"] = "invalide";
 			  $adresse = NULL;
 			}else{
 				$adresse = mysqli_real_escape_string($mysqli,$_POST["adressebdd"]);
-				if(sizeof($adresse)>500){
+				if(strlen($adresse)>500){
 				$return["Adresse"] = "L'adresse n'est pas valide";
 				$ok = false;
 				}
@@ -119,7 +119,7 @@ $result["msg"] = "invalide";
 			  $ville = NULL;
 			}else{
 				$ville = mysqli_real_escape_string($mysqli,$_POST["villebdd"]);
-				if(sizeof($ville)>50){
+				if(strlen($ville)>50){
 				$return["ville"] = "La ville n'est pas valide";
 				$ok = false;
 				}
@@ -134,7 +134,7 @@ $result["msg"] = "invalide";
 			  $codepostal = NULL;
 			}else{
 				$codepostal = mysqli_real_escape_string($mysqli,$_POST["codepostalbdd"]);
-				if(sizeof($codepostal)>50){
+				if(strlen($codepostal)>50){
 				$return["codepostal"] = "le code postal n'est pas valid";
 				$ok = false;
 				}
@@ -148,7 +148,7 @@ $result["msg"] = "invalide";
 			  $date = NULL;
 			}else{
 				$date = mysqli_real_escape_string($mysqli,$_POST["datebdd"]);
-				if(sizeof($date)>50){
+				if(strlen($date)>50){
 				$return["date"] = "le code postal n'est pas valid";
 				$ok = false;
 				}
@@ -227,7 +227,17 @@ $result["msg"] = "invalide";
         				die("Une erreur est survenue. Veuillez réessayer plus tard.");
     }
     return $resultat; }
-				  setcookie("user",$login);
+                    setcookie(
+                        "user",
+                        $login,
+                        [
+                            "expires"  => 0,
+                            "path"     => "/",
+                            "secure"   => false,
+                            "httponly" => true,
+                            "samesite" => "Lax"
+                        ]
+                    );
 				  unset($return);
 				  $return["msg"] = "Opération réussie";
 	}

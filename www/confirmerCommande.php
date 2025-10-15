@@ -43,7 +43,7 @@ if(isset($_COOKIE["panier"]) && isset($_SESSION["login"]) && isset($_POST["num"]
         $nom = isset($_SESSION["NOM"]) ? $_SESSION["NOM"] : '';
         $prenom = isset($_SESSION["PRENOM"]) ? $_SESSION["PRENOM"] : '';
         $adresse = isset($_SESSION["ADRESSE"]) ? $_SESSION["ADRESSE"] : '';
-        $cp = isset($_SESSION["CP"]) ? $_SESSION["CP"] : '';
+        $cp        = isset($_SESSION["CP"]) && $_SESSION["CP"] !== '' ? intval($_SESSION["CP"]) : 0;
         $ville = isset($_SESSION["VILLE"]) ? $_SESSION["VILLE"] : '';
         $telephone = isset($_SESSION["TELEPHONE"]) ? $_SESSION["TELEPHONE"] : '';
 
@@ -127,7 +127,17 @@ if(isset($_COOKIE["panier"]) && isset($_SESSION["login"]) && isset($_POST["num"]
             'total'    => $total
         ];
 
-        setcookie("panier", "", time()-3600, "/");
+        setcookie(
+            "panier",
+            "",
+            [
+                "expires"  => time() - 3600,
+                "path"     => "/",
+                "secure"   => false,
+                "httponly" => true,
+                "samesite" => "Strict"
+            ]
+        );
         mysqli_close($mysqli);
 
         $_SESSION["paiement"] = "Opération réussie !";

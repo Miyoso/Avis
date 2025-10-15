@@ -1,4 +1,6 @@
 <?php
+
+/* FONCTION NON UTILISEE
 function connexion()
 {
 	if(isset($_SESSION['erreur'])) unset($_SESSION['erreur']);
@@ -45,6 +47,8 @@ function connexion()
 		}
 	}
 }
+
+*/
 
 function afficherFormulaire($data)
 {

@@ -1,4 +1,14 @@
 <?php
+// AJOUT pour remplacer MD5 plus d'actualité
+function generer_mdp(int $longueur = 8): string {
+    $alphabet = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $max = strlen($alphabet) - 1;
+    $motdepasse = '';
+    for ($i = 0; $i < $longueur; $i++) {
+        $motdepasse .= $alphabet[random_int(0, $max)];
+    }
+    return $motdepasse;
+}
 	//verification de l'email inseree
 	if(isset($_POST["email"]) && preg_match('#^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,5}$#', $_POST["email"])){
 		include("../Parametres.php");
@@ -24,9 +34,11 @@
             mysqli_close($mysqli);
             exit;
         }
+
+
 		$result = query($mysqli,'select login,prenom,nom,email,adresse,ville,telephone from USERS where login = \'admin\'');
 		//creation d'un nouveau mot de pass
-		$newpass = substr(str_shuffle(MD5(microtime())), 0, 8);
+        $newpass = generer_motdepasse(8);
 		$message = "Monsieur, Madame, \n\n\n Votre mot de pass pour le site TaupeAchat est maintenant: ".$newpass.".\n\n\nBien cordialement, l'equipe Taupe Achat.";
 		$val = mail($_POST["email"],"TaupeAchat - Nouveau mot de pass",$message,"From: noreply@taupeachat.com");
 		

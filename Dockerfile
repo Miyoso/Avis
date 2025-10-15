@@ -1,20 +1,30 @@
 FROM php:apache
 
-# Ajouter ici les extensions spécifiques dont votre application a besoin
+
 RUN apt-get update && \
     apt-get install -y \
         git \
         unzip \
         libzip-dev \
         libpng-dev \
+        default-mysql-client \
+        libonig-dev \
+        libxml2-dev \
+        zlib1g-dev \
     --no-install-recommends && \
     rm -rf /var/lib/apt/lists/*
 
-# Active les extensions PHP nécessaires (exemples)
-RUN docker-php-ext-install pdo pdo_mysql mysqli zip gd
 
-WORKDIR /var/www/html
+RUN docker-php-ext-install zip gd mysqli pdo pdo_mysql
 
-COPY www/ .
 
-RUN chown -R www-data:www-data /var/www/html
+RUN useradd -m appuser && chown -R appuser:www-data /var/www/html
+
+
+USER appuser
+
+
+EXPOSE 80
+
+
+CMD ["apache2-foreground"]
