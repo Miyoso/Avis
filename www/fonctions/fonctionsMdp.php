@@ -4,8 +4,26 @@
 		include("../Parametres.php");
 		include("../Fonctions.inc.php");
 
-		$mysqli=mysqli_connect($host,$user,$pass) or die("Problème de création de la base :".mysqli_error());
-		mysqli_select_db($mysqli,$base) or die("Impossible de sélectionner la base : $base");	
+        // Ancien (vulnérable) :
+        // $mysqli=mysqli_connect($host,$user,$pass) or die("Problème de création de la base :".mysqli_error());
+        // mysqli_select_db($mysqli,$base) or die("Impossible de sélectionner la base : $base");
+
+        // Début Correction
+        $mysqli = @mysqli_connect($host, $user, $pass);
+        if (!$mysqli) {
+            // ne pas l'afficher à l'utilisateur
+            error_log('DB connection failed: ' . mysqli_connect_error());
+            // message simple pour l'utilisateur
+            echo "Erreur serveur, veuillez réessayer plus tard.";
+            exit;
+        }
+
+        if (!@mysqli_select_db($mysqli, $base)) {
+            error_log('DB select failed: ' . mysqli_error($mysqli));
+            echo "Erreur serveur, veuillez réessayer plus tard.";
+            mysqli_close($mysqli);
+            exit;
+        }
 		$result = query($mysqli,'select login,prenom,nom,email,adresse,ville,telephone from users where login = \'admin\'');
 		//creation d'un nouveau mot de pass
 		$newpass = substr(str_shuffle(MD5(microtime())), 0, 8);
