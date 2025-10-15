@@ -24,30 +24,30 @@
             mysqli_close($mysqli);
             exit;
         }
-		$result = query($mysqli,'select login,prenom,nom,email,adresse,ville,telephone from users where login = \'admin\'');
+		$result = query($mysqli,'select login,prenom,nom,email,adresse,ville,telephone from USERS where login = \'admin\'');
 		//creation d'un nouveau mot de pass
 		$newpass = substr(str_shuffle(MD5(microtime())), 0, 8);
 		$message = "Monsieur, Madame, \n\n\n Votre mot de pass pour le site TaupeAchat est maintenant: ".$newpass.".\n\n\nBien cordialement, l'equipe Taupe Achat.";
 		$val = mail($_POST["email"],"TaupeAchat - Nouveau mot de pass",$message,"From: noreply@taupeachat.com");
 		
 		//verification si l'email a été envoyé
-		if($val){
-			//Vuln ligne naze SQL Injection
-			//$result = mysql_query("insert into users (PASS) values ('".password_hash(($newpass), PASSWORD_DEFAULT)."') where email='".$_POST["email"]."'");
+		if($val) {
+            //Vuln ligne naze SQL Injection
+            //$result = mysql_query("insert into users (PASS) values ('".password_hash(($newpass), PASSWORD_DEFAULT)."') where email='".$_POST["email"]."'");
 
             //correc
 
-            $stmt = $mysqli->prepare("UPDATE users SET PASS = ? WHERE email = ?");
+            $stmt = $mysqli->prepare("UPDATE USERS SET PASS = ? WHERE email = ?");
             $stmt->bind_param("ss", password_hash($newpass, PASSWORD_DEFAULT), $_POST["email"]);
             $stmt->execute();
             $stmt->close();
 
-			echo "Nouveau mot de pass envoyé";
-			
+            echo "Nouveau mot de pass envoyé";
 		}else{
 			
-			echo "Erreur : Email invalide";
-			
+			//MODIF echo "Erreur : Email invalide"; Donne des indications aux attaquants
+			echo "Si l'adresse email est enregistrée, un nouveau mot de passe a été envoyé.";
+
 		}
 		mysqli_close($mysqli);
 	}else{
