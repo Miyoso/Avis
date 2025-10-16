@@ -4,8 +4,23 @@
 		include("Fonctions.inc.php");
 		include("Donnees.inc.php");
 
-		$mysqli=mysqli_connect($host,$user,$pass) or die("Problème de création de la base :".mysqli_error());
-		mysqli_select_db($mysqli,$base) or die("Impossible de sélectionner la base : $base");
+        // Ancien code (vulnérable) :
+        // $mysqli = mysqli_connect($host, $user, $pass) or die("Problème de création de la base :" . mysqli_error());
+
+        // Début Correction
+        $mysqli = @mysqli_connect($host, $user, $pass);
+        if (!$mysqli) {
+            error_log('Erreur connexion DB : ' . mysqli_connect_error());
+            echo 'Erreur interne du serveur. Veuillez réessayer plus tard.';
+            exit;
+        }
+        if (!@mysqli_select_db($mysqli, $base)) {
+            error_log('Erreur sélection base : ' . mysqli_error($mysqli));
+            echo 'Erreur interne du serveur. Veuillez réessayer plus tard.';
+            mysqli_close($mysqli);
+            exit;
+        }
+        // Fin Correction
 		
 		echo "<a href='ajouterProd.php'>Ajouter un produit</a><br/>";
 		//echo "<a href='ajouterProd.php'>Ajouter une rubrique</a><br/>";
