@@ -359,9 +359,27 @@ function afficherAdministration()
         // MODIF $result = mysql_query('select * from commande order by id_com DESC');
         $sql = "SELECT ID_COM FROM COMMANDES ORDER BY ID_COM DESC";
         $res_cmds = mysqli_query($mysqli, "SELECT ID_COM FROM COMMANDES ORDER BY ID_COM DESC");
+//Ancien code vulnerable
+        //        if (!$res_cmds) {
+//            die('Erreur SQL : ' . mysqli_error($mysqli));
+//        }
+
+// Ancien (vulnérable) :
+// if (!$res_cmds) {
+//     die('Erreur SQL : ' . mysqli_error($mysqli));
+// }
+
+// Début Correction
         if (!$res_cmds) {
-            die('Erreur SQL : ' . mysqli_error($mysqli));
+            // logger l'erreur pour l'admin
+            error_log('DB query failed (SELECT ID_COM): ' . mysqli_error($mysqli));
+            // message générique côté client
+            echo '<div>Erreur lors de la récupération des commandes. Veuillez réessayer plus tard.</div>';
+
+            return;
         }
+// Fin Correction
+
 
         if(mysqli_num_rows($res_cmds) === 0) {
             echo '<div>Aucune commande enregistrée.</div>';
