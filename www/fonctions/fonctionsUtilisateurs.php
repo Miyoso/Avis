@@ -4,8 +4,25 @@
 		include("Fonctions.inc.php");
 		include("Donnees.inc.php");
 
-		$mysqli=mysqli_connect($host,$user,$pass) or die("Problème de création de la base :".mysqli_error());
-		mysqli_select_db($mysqli,$base) or die("Impossible de sélectionner la base : $base");	
+        // Ancien code vulnérable :
+        // $mysqli = mysqli_connect($host, $user, $pass) or die("Problème de création de la base :".mysqli_error());
+
+        // Début Correction
+        $mysqli = @mysqli_connect($host, $user, $pass);
+        if (!$mysqli) {
+            error_log('Erreur connexion DB : ' . mysqli_connect_error());
+            echo '<p>Erreur interne du serveur. Veuillez réessayer plus tard.</p>';
+            exit;
+        }
+
+        if (!@mysqli_select_db($mysqli, $base)) {
+            error_log('Erreur sélection DB : ' . mysqli_error($mysqli));
+            echo '<p>Erreur interne du serveur. Veuillez réessayer plus tard.</p>';
+            mysqli_close($mysqli);
+            exit;
+        }
+        // Fin Correction
+        
 		echo "<hr>";
 		$result = query($mysqli,'select login,prenom,nom,email,adresse,ville,telephone from USERS where IS_ADMIN = true');
 		$result2 = query($mysqli,'select login,prenom,nom,email,adresse,ville,telephone from USERS where IS_ADMIN = false');
