@@ -39,7 +39,7 @@
 				if(is_null($row["PRENOM"])){$prenom = "";}else{$prenom = $row["PRENOM"];}
 				if(is_null($row["DATE"])){$date = "";}else{$date = $row["DATE"];}
 				if(is_null($row["TELEPHONE"])){$telephone = "";}else if((int)$row["TELEPHONE"] == 0){ $telephone = NULL;}else{$telephone = $row["TELEPHONE"];}
-				if(is_null($row["ADRESSE"])){$ADRESSEe = "";}else{$ADRESSEe = $row["ADRESSE"];}
+				if(is_null($row["ADRESSE"])){$adresse = "";}else{$adresse = $row["ADRESSE"];}
 				if(is_null($row["CODEP"])){$codepostal = "";}else{$codepostal = $row["CODEP"];}
 				if(is_null($row["VILLE"])){$ville = "";}else{$ville = $row["VILLE"];}
 				if(is_null($row["SEXE"])){$sexe = "";}else{$sexe = $row["SEXE"];}
@@ -109,7 +109,7 @@
 										</tr>
 										
 										<tr>
-											<td><p><strong>ADRESSE</strong></p></td><td><textarea name='ADRESSEebdd' rows=\"4\" placeholder=\"".$ADRESSEe."\"></textarea></td>
+											<td><p><strong>ADRESSE</strong></p></td><td><textarea name='adressebdd' rows=\"4\" placeholder=\"".$adresse."\"></textarea></td>
 										</tr>
 										<tr>
 											<td><p><strong>Ville</strong></p></td><td><input name='villebdd' type=\"text\" placeholder=\"".$ville."\"/></td>
@@ -130,7 +130,7 @@
 									echo '</form>';
 									}
 									else{
-										echo "<font color='grey'>Connectez vous pour afficher cette page</font>";
+										echo "<font color='grey'>Connectez-vous pour afficher cette page</font>";
 									}
 								?>
 							</section>
