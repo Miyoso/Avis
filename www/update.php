@@ -19,8 +19,26 @@ if (!$mysqli) {
     die("Oups — problème de connexion à la base. Merci de réessayer plus tard.");
 }
 
-$str = "SELECT * FROM USERS WHERE LOGIN = '" . $_SESSION["login"] . "'";
-$result = query($mysqli, $str) or die ("Impossible de faire une connection à base de donnèes<br>");
+//MODIF $str = "SELECT * FROM USERS WHERE LOGIN = '" . $_SESSION["login"] . "'";
+//MODIF $result = query($mysqli, $str) or die ("Impossible de faire une connection à base de donnèes<br>");
+// Eviter injection SQL avec requête préparée
+$stmt = $mysqli->prepare("SELECT * FROM USERS WHERE LOGIN = ?");
+if ($stmt === false) {
+    error_log("Erreur préparation SELECT user: " . $mysqli->error);
+    die("Impossible de récupérer le profil pour le moment.");
+}
+$login = $_SESSION["login"];
+if (!$stmt->bind_param('s', $login)) {
+    error_log("Erreur bind_param SELECT user: " . $stmt->error);
+    die("Impossible de traiter la demande pour le moment.");
+}
+if (!$stmt->execute()) {
+    error_log("Erreur exécution SELECT user: " . $stmt->error);
+    die("Impossible de récupérer le profil pour le moment.");
+}
+$result = $stmt->get_result();
+$stmt->close();
+
 $row = mysqli_fetch_assoc($result);
 if ((isset($_POST["emailbdd"]) && empty($_POST["emailbdd"])) || !(isset($_POST["emailbdd"]))) {
     $email = $row["EMAIL"];
@@ -74,7 +92,8 @@ if ((isset($_POST["prenombdd"]) && empty($_POST["prenombdd"])) || !(isset($_POST
 if ((isset($_POST["adressebdd"]) && empty($_POST["adressebdd"])) || !(isset($_POST["adressebdd"]))) {
     $adresse = $row["ADRESSE"];
 } else {
-    if (!preg_match("/^[a-zA-Z'\- ]+$/", $_POST["adressebdd"])) {
+    //MODIF if (!preg_match("/^[a-zA-Z'\- ]+$/", $_POST["adressebdd"])) {
+    if (!preg_match("/^[\p{L}0-9'\- \r\n]+$/u", $_POST["adressebdd"])) { // Autorise les lettres accentuées et les chiffres
         $adresse = $row["ADRESSE"];
     } else if (strlen(trim(mysqli_real_escape_string($mysqli, $_POST["adressebdd"]))) > 500) {
         $adresse = $row["ADRESSE"];

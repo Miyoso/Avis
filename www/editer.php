@@ -30,16 +30,37 @@
         }
 
 
-				$str = "SELECT LOGIN,EMAIL,PASS,NOM,PRENOM,DATE,SEXE,ADRESSE,CODEP,VILLE,TELEPHONE FROM USERS WHERE LOGIN = '".$_SESSION["login"]."'";
-				$result = query($mysqli,$str) or die("Impossible de se connecter");
-				$row = mysqli_fetch_assoc($result);
+        //MODIF $str = "SELECT LOGIN,EMAIL,PASS,NOM,PRENOM,DATE,SEXE,ADRESSE,CODEP,VILLE,TELEPHONE FROM USERS WHERE LOGIN = '".$_SESSION["login"]."'";
+        //MODIF $result = query($mysqli,$str) or die("Impossible de se connecter");
+        //Préparation de la requête pour éviter les injections SQL
+
+        $sql = "SELECT LOGIN,EMAIL,PASS,NOM,PRENOM,DATE,SEXE,ADRESSE,CODEP,VILLE,TELEPHONE FROM USERS WHERE LOGIN = ?";
+        $stmt = mysqli_prepare($mysqli, $sql);
+        if ($stmt === false) {
+            error_log("Erreur préparation SELECT user: " . $mysqli->error);
+            die("Impossible de récupérer le profil pour le moment.");
+        }
+        $login = $_SESSION["login"];
+        if (!$stmt->bind_param('s', $login)) {
+            error_log("Erreur bind_param SELECT user: " . $stmt->error);
+            die("Impossible de traiter la demande pour le moment.");
+        }
+        if (!$stmt->execute()) {
+            error_log("Erreur exécution SELECT user: " . $stmt->error);
+            die("Impossible de récupérer le profil pour le moment.");
+        }
+        $result = $stmt->get_result();
+        $stmt->close();
+
+
+        $row = mysqli_fetch_assoc($result);
 				if(is_null($row["LOGIN"])){$login = "";}else{$login = $row["LOGIN"];}
 				if(is_null($row["EMAIL"])){$email = "";}else{$email = $row["EMAIL"];}
 				if(is_null($row["NOM"])){$nom = "";}else{$nom = $row["NOM"];}
 				if(is_null($row["PRENOM"])){$prenom = "";}else{$prenom = $row["PRENOM"];}
 				if(is_null($row["DATE"])){$date = "";}else{$date = $row["DATE"];}
 				if(is_null($row["TELEPHONE"])){$telephone = "";}else if((int)$row["TELEPHONE"] == 0){ $telephone = NULL;}else{$telephone = $row["TELEPHONE"];}
-				if(is_null($row["ADRESSE"])){$ADRESSEe = "";}else{$ADRESSEe = $row["ADRESSE"];}
+				if(is_null($row["ADRESSE"])){$adresse = "";}else{$adresse = $row["ADRESSE"];}
 				if(is_null($row["CODEP"])){$codepostal = "";}else{$codepostal = $row["CODEP"];}
 				if(is_null($row["VILLE"])){$ville = "";}else{$ville = $row["VILLE"];}
 				if(is_null($row["SEXE"])){$sexe = "";}else{$sexe = $row["SEXE"];}
@@ -109,7 +130,7 @@
 										</tr>
 										
 										<tr>
-											<td><p><strong>ADRESSE</strong></p></td><td><textarea name='ADRESSEebdd' rows=\"4\" placeholder=\"".$ADRESSEe."\"></textarea></td>
+											<td><p><strong>ADRESSE</strong></p></td><td><textarea name='adressebdd' rows=\"4\" placeholder=\"".$adresse."\"></textarea></td>
 										</tr>
 										<tr>
 											<td><p><strong>Ville</strong></p></td><td><input name='villebdd' type=\"text\" placeholder=\"".$ville."\"/></td>
@@ -130,7 +151,7 @@
 									echo '</form>';
 									}
 									else{
-										echo "<font color='grey'>Connectez vous pour afficher cette page</font>";
+										echo "<font color='grey'>Connectez-vous pour afficher cette page</font>";
 									}
 								?>
 							</section>
