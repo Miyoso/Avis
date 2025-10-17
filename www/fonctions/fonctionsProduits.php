@@ -26,7 +26,9 @@
 		//echo "<a href='ajouterProd.php'>Ajouter une rubrique</a><br/>";
 		echo "<hr>";
 		echo "<h2>Produits</h2><br/>";
-		$result = query($mysqli,'select id_prod,Libelle,Prix from PRODUITS');
+		//MODIF $result = query($mysqli,'select id_prod,Libelle,Prix from PRODUITS');
+        // Faire une requete qui garde seulement les rubriques non vides
+        $result = query($mysqli,'select id_prod,Libelle,Prix from PRODUITS where id_prod in (select distinct id_prod from APPARTIENT)');
 		
 		if(mysqli_num_rows($result)<=0){
 			echo "Aucun enregistrement dans la base de données";
