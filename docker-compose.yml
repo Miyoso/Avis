@@ -15,12 +15,13 @@ services:
     ports:
       - "8080:80"
 
-    #TODO Utiliser des variables d'environnement plutot que des valeurs en dur dans Parametre.php
-    #    environment:
-    #      DB_HOST: 127.0.0.1
-    #      DB_NAME: TaupeMeubles
-    #      DB_USER: root
-    #      DB_PASSWORD: password
+    # Utilisation des variables d'environnement pour la configuration de la base de données
+    environment:
+        DB_HOST: db
+        DB_USER: ${DB_USER}
+        DB_PASSWORD: ${DB_PASSWORD}
+        DB_NAME: ${DB_NAME}
+        DB_ID_USER: ${DB_ID_USER}
 
     depends_on:
       - db
@@ -37,12 +38,12 @@ services:
     image: mysql:8.0.43
     container_name: taupe-meubles-db
 
-#TODO Modifier les valeurs et les mettre dans un fichier .env
+    # Utilisation des variables d'environnement pour la configuration de la base de données
     environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: TaupeMeubles
-      MYSQL_USER: taupe_user
-      MYSQL_PASSWORD: taupe_password
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
 
     volumes:
       - db_data:/var/lib/mysql
