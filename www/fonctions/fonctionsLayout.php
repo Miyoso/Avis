@@ -57,10 +57,10 @@ function afficherCadrePanier()
 function afficherCadreCompte()
 {
 	echo '<ul>';
-	
+
 	if(!isset($_SESSION["login"])) echo '<li><a class="btn btn-default" href="connexion.php">Connexion</a></li><li><a class="btn btn-default" href="inscription.php">Ouvrir un compte</a></li>';
     //MODIF ajout d'une verif si admin
-    else if (isset($_SESSION["admin"]) && $_SESSION["admin"] == 1) {
+    else if (isset($_SESSION["isAdmin"]) && $_SESSION["isAdmin"] == 1) {
         echo '<li><a class="btn btn-default" href="administration.php">Administration</a></li><li><a class="btn btn-default" href="profil.php">Mon compte</a></li><li><a href="histoire.php">Histoire</a></li><li><a href="deconnexion.php">Deconnexion</a></li>';
     }
     else

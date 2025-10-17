@@ -21,7 +21,8 @@ function afficherAdmin(){
 function uploadFichier()
 {
 	if(isset($_FILES['xml']))
-	{ 
+	{
+
 		$fichier = 'upload/'.basename($_FILES['xml']['name']);
 
 		if(move_uploaded_file($_FILES['xml']['tmp_name'], $fichier))
