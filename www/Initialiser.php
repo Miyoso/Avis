@@ -1,4 +1,5 @@
-<html>
+<!DOCTYPE HTML>
+<html lang="fr">
 <head>
     <title>Initialisation de la base de données</title>
     <meta charset="utf-8"/>

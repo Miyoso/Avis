@@ -10,7 +10,7 @@ if (
 ) {
     ?>
     <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
-    <html><head>
+    <html lang="fr"><head>
         <title>404 Not Found</title>
     </head><body>
     <h1>Not Found</h1>
@@ -27,7 +27,7 @@ if (
 	templated.co @templatedco
 	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
 -->
-<html>
+<html lang="fr">
 	<head>
 		<title>Taupe Meubles</title>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />

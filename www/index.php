@@ -11,7 +11,7 @@
 	templated.co @templatedco
 	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
 -->
-<html>
+<html lang="fr">
 	<head>
 		<title>Taupe Meubles</title>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
