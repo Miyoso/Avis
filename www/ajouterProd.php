@@ -32,6 +32,36 @@
 			<link rel="stylesheet" href="css/skel.css" />
 			<link rel="stylesheet" href="css/style.css" />
 		</noscript>
+        <!-- MODIF Ajout du script AJAX pour le formulaire ajouterProd-->
+        <script>
+            function envoyerFormulaireAjax(event) {
+                // Empêche le rechargement de la page
+                event.preventDefault();
+
+                // 'event.target' est le formulaire lui-même
+                var form = event.target;
+                var formData = new FormData(form);
+
+                $.ajax({
+                    type: 'POST',
+                    // L'URL est récupérée depuis l'attribut 'action' du formulaire
+                    url: form.action,
+                    data: formData,
+                    // Indispensable pour l'envoi de fichiers
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        // 'response' contient ce que le script PHP 'fonctionsAjouterProdd.php' aurait affiché
+                        alert(response);
+                        //refresh de la page
+                        location.reload();
+                    },
+                    error: function() {
+                        alert("Une erreur est survenue.");
+                    }
+                });
+            }
+        </script>
 		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
 	</head>
 	<body>

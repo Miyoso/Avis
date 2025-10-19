@@ -1,7 +1,7 @@
 # Empêcher l'accès direct aux fichiers PHP sauf pour les requêtes AJAX et fonctionsAjouterProdd.php
   <FilesMatch "\.php$">
     SetEnvIf X-Requested-With "XMLHttpRequest" ajax
-    SetEnvIf Request_URI "fonctionsAjouterProdd\.php$" allow_file
+    #SetEnvIf Request_URI "fonctionsAjouterProdd\.php$" allow_file
     Order Deny,Allow
     Deny from all
     Allow from env=ajax

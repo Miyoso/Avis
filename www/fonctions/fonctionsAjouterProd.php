@@ -12,7 +12,8 @@
 
         echo '</select>';
         echo "<h2>Ajouter produit</h2><br/>";
-		echo "<form  enctype='multipart/form-data' action='fonctions/fonctionsAjouterProdd.php' method='post' class='putImages'>";
+        // Ajout du formulaire avec l'attribut onsubmit pour l'appel AJAX
+		echo "<form  enctype='multipart/form-data' onsubmit='envoyerFormulaireAjax(event)' action='fonctions/fonctionsAjouterProdd.php' method='post' class='putImages'>";
 		echo "<table>";
 		echo "<tr><td wnameth='180px'>Libelle</td><td><input type='text' name='libelle'></input></td></tr>";
 		echo "<tr><td>Prix</td><td><input type='text' name='prix'></input></td></tr>";
