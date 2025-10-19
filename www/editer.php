@@ -106,7 +106,7 @@
 								</header>
 									<?php
 								echo '<form action="update.php" method="post">';
-									if(isset($row["LOGIN"])){
+									if(isset($login)){
 										echo "					
 										<table wnameth='30%'>
 										<tr>
