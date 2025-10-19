@@ -107,6 +107,7 @@ $rubrique = $_GET['rubrique'] ?? '';
                                             p.id_prod AS id,
                                             p.Libelle AS lib,
                                             p.Photo AS photo,
+                                            p.Prix AS prix,
                                             p.Descriptif AS descr
                                         FROM PRODUITS p
                                         JOIN APPARTIENT a ON a.id_prod = p.id_prod
@@ -131,6 +132,7 @@ $rubrique = $_GET['rubrique'] ?? '';
                                         echo '<img src="' . htmlspecialchars($photoPath, ENT_QUOTES, 'UTF-8') . '" class="Image"/>';
                                         echo '<h3 style="color:grey">' . htmlspecialchars($row["lib"], ENT_QUOTES, 'UTF-8') . '</h3>';
                                         echo '<p style="color:grey">' . htmlspecialchars($row["descr"], ENT_QUOTES, 'UTF-8') . '</p>';
+                                        echo '<p style="color:black">Prix :'.$row["prix"].'€</p>';
                                         echo '</div>';
 
                                         $temp++;

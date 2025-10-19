@@ -18,6 +18,7 @@
 			echo '<img src="'.$row["PHOTO"].'" class="Image"/>';
 			echo '<h3 style="color:grey">'.$row["LIBELLE"].'</h3>';
 			echo '<p style="color:black">'.$row["DESCRIPTIF"].'</p>';
+            echo '<p style="color:black">Prix :'.$row["PRIX"].'€</p>';
 			echo '</div>';
 			$temp++;
 			if($temp == 4){
