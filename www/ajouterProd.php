@@ -5,6 +5,9 @@
 	}
 	include 'fonctions/fonctionsLayout.php';
 	include 'fonctions/fonctionsAjouterProd.php';
+    include 'Parametres.php';
+    $mysqli = mysqli_connect($host, $user, $pass, $base) or die("Erreur de connexion : " . mysqli_connect_error());
+    mysqli_select_db($mysqli, $base) or die("Une erreur est survenue.");
 	
 ?>	
 <!DOCTYPE HTML>
@@ -46,7 +49,7 @@
 									<h2>Ajouter un produit</h2>
 								</header>
 								<div id="reponse"></div>
-								<?php ajouterProduit(); ?>
+								<?php ajouterProduit($mysqli); ?>
 							</section>
 						</div>					
 					</div>
