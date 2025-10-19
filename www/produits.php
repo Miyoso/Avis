@@ -1,6 +1,15 @@
 <?php
-	include 'fonctions/fonctionsLayout.php';
-	include 'fonctions/fonctionsProduits.php';
+session_start();
+include 'fonctions/fonctionsLayout.php';
+include 'fonctions/fonctionsProduits.php';
+include("Parametres.php");
+include_once 'Fonctions.inc.php';
+include_once 'Donnees.inc.php';
+
+$mysqli = mysqli_connect($host, $user, $pass, $base) or die("Erreur de connexion : " . mysqli_connect_error());
+mysqli_select_db($mysqli, $base) or die("Une erreur est survenue.");
+
+$rubrique = $_GET['rubrique'] ?? '';
 ?>
 <!DOCTYPE HTML>
 <!--
@@ -42,6 +51,35 @@
 						});
 		}
 		</script>
+        <script>
+            $().ready(function() {
+                $('a img').click(function (e){
+                    e.preventDefault();
+                });
+            });
+
+            function addPanier(e){
+                $.ajax({
+                    type: 'POST',
+                    url: 'fonctions/fonctionsPanier.php',
+                    data: {item : e},
+                    success: function(data){
+                        alert(data);
+                    },
+                });
+            };
+
+            function addFav(e){
+                $.ajax({
+                    type: 'POST',
+                    url: 'fonctions/fonctionsFav.php',
+                    data: {item : e},
+                    success: function(data){
+                        alert(data);
+                    },
+                });
+            };
+        </script>
 		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
 	</head>
 	<body>
@@ -57,8 +95,60 @@
 								<header class="major">
 									<h2>Produits</h2>
 								</header>
-								<?php afficherProduits(); ?>
-							</section>
+                                <?php
+                                // Ancien code (vulnérable) :
+                                // $mysqli=mysqli_connect($host,$user,$pass) or die("Problème de création de la base :".mysqli_error());
+                                // mysqli_select_db($mysqli,$base) or die("Impossible de sélectionner la base : $base")
+                                // Exemple : récupérer toutes les rubriques existantes
+                                if ($rubrique) {
+                                    // Récupère uniquement les produits de la rubrique sélectionnée
+                                    $stmt = $mysqli->prepare("
+                                        SELECT 
+                                            p.id_prod AS id,
+                                            p.Libelle AS lib,
+                                            p.Photo AS photo,
+                                            p.Descriptif AS descr
+                                        FROM PRODUITS p
+                                        JOIN APPARTIENT a ON a.id_prod = p.id_prod
+                                        JOIN RUBRIQUES r ON a.id_rub = r.id_rub
+                                        WHERE r.Libelle_rub = ?
+                                    ");
+                                    $stmt->bind_param("s", $rubrique);
+                                    $stmt->execute();
+                                    $result = $stmt->get_result();
+
+                                    echo '<h2>' . htmlspecialchars($rubrique, ENT_QUOTES, 'UTF-8') . '</h2>';
+                                    echo '<div class="wrapper style5"><section id="team" class="container"><div class="row">';
+
+                                    $temp = 0;
+                                    while ($row = $result->fetch_assoc()) {
+                                        // Nettoyage des chemins (remplacement des "\" par "/")
+                                        $photoPath = str_replace('\\', '/', $row["photo"]);
+
+                                        echo '<div class="3u">';
+                                        echo '<a href="#" onclick="addPanier(\'' . $row["id"] . '\')"><img src="images/13336.gif" style="height:30px;"/></a> ';
+                                        echo '<a href="#" onclick="addFav(\'' . $row["id"] . '\')"><img src="images/favorite_add.png" style="height:40px;"/></a><br/>';
+                                        echo '<img src="' . htmlspecialchars($photoPath, ENT_QUOTES, 'UTF-8') . '" class="Image"/>';
+                                        echo '<h3 style="color:grey">' . htmlspecialchars($row["lib"], ENT_QUOTES, 'UTF-8') . '</h3>';
+                                        echo '<p style="color:grey">' . htmlspecialchars($row["descr"], ENT_QUOTES, 'UTF-8') . '</p>';
+                                        echo '</div>';
+
+                                        $temp++;
+                                        if ($temp == 4) {
+                                            echo '</div><div class="row">';
+                                            $temp = 0;
+                                        }
+                                    }
+
+                                    echo '</div></section></div>';
+                                } else {
+                                    // Pas de rubrique sélectionnée : afficher tous les produits
+                                    afficherProduits($mysqli);
+                                }
+
+                                mysqli_close($mysqli);
+                                ?>
+                            </section>
 						</div>					
 					</div>
 				</div>

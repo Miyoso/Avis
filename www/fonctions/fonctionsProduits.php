@@ -50,5 +50,18 @@
 		}
 		mysqli_close($mysqli);
 	}
-	
+
+    function getProduitsParRubrique($rubrique)
+    {
+        global $mysqli; // Assure-toi que $mysqli est défini dans config.php ou inclus ici
+
+        $stmt = mysqli_prepare($mysqli, "SELECT p.ID_PROD, p.LIBELLE, p.photo as photo, p.DESCRIPTIF, p.PRIX FROM PRODUITS p JOIN APPARTIENT a ON p.ID_PROD = a.ID_PROD JOIN RUBRIQUES r ON a.ID_RUB = r.ID_RUB WHERE r.LIBELLE_RUB = ?");
+        mysqli_stmt_bind_param($stmt, "s", $rubrique);
+        mysqli_stmt_execute($stmt);
+        $res = mysqli_stmt_get_result($stmt);
+        $produits = mysqli_fetch_all($res, MYSQLI_ASSOC);
+        mysqli_stmt_close($stmt);
+
+        return $produits;
+    }
 ?>

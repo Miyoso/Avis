@@ -168,7 +168,38 @@ function insererProd($prod)
     // AJOUT
     global $mysqli;
 
-    if(!isset($prod['Photo'])) $prod['Photo'] = 'img_encours.jpg';
+
+    $allowed = ['jpg','jpeg','png','bmp'];
+
+    // Le chemin complet vers le fichier sur ton bureau (à adapter selon ton OS et nom d'utilisateur)
+    $desktopPath = $prod['Photo'] ?? '';
+    if (!file_exists($desktopPath)) $desktopPath = ''; // sécurité
+    $baseName = basename($desktopPath);
+    $ext = strtolower(pathinfo($baseName, PATHINFO_EXTENSION));
+
+    // Vérifie si l'extension est autorisée et si le fichier existe
+    if (in_array($ext, $allowed, true) && file_exists($desktopPath)) {
+
+        $targetDir = $_SERVER['DOCUMENT_ROOT'] . '/images/';
+
+        // Crée le dossier si besoin
+        if (!is_dir($targetDir)) mkdir($targetDir, 0755, true);
+
+        $targetPath = $targetDir . $baseName;
+
+        // Copie du fichier depuis le bureau vers images
+        if (copy($desktopPath, $targetPath)) {
+            $file_result = 'images/' . $baseName; // chemin à mettre dans la BD
+        } else {
+            $file_result = 'Error'; // Échec du déplacement
+        }
+
+    } else {
+        $file_result = 'Error'; // Fichier non autorisé ou inexistant
+    }
+
+
+
 	if(!isset($prod['Descriptif'])) $prod['Descriptif'] = '';
 	if(!isset($prod['Rubriques']))
 	{

@@ -1,27 +1,57 @@
 <?php
-	$file_result = '';
-	if($_FILES['file']['error']>0 && (!preg_match("/.jpg$/",$_FILES['file']['name']) || !preg_match("/.png$/",$_FILES['file']['name']) || !preg_match("/.bmp$/",$_FILES['file']['name']) || !preg_match("/.jpeg$/",$_FILES['file']['name']))){
-		
-		$file_result = 'Error';
-		
-	}else{
-        //ligne inco
-//		$file_result = 'images/'.$_FILES['file']['name'];
-//		move_uploaded_file($_FILES['file']['tmp_name'],'../'.$file_result);
+$file_result = '';
 
-        //propal correc
-        //Path Traversal
-        $allowed = ['jpg','jpeg','png','bmp'];
-        $baseName = basename($_FILES['file']['name']);
-        $ext = strtolower(pathinfo($baseName, PATHINFO_EXTENSION));
+// Vérification de l'erreur d'upload système
+if($_FILES['file']['error'] > 0){
 
-        if (in_array($ext, $allowed, true) && is_uploaded_file($_FILES['file']['tmp_name'])) {
-            $file_result = 'images/' . $baseName;
-            move_uploaded_file($_FILES['file']['tmp_name'], '../' . $file_result);
+    $file_result = 'Error'; // Ou 'Error_upload' pour distinguer
+
+} else {
+
+    $file_info = $_FILES['file'];
+
+    // Si une erreur est survenue pendant l'upload, affichez-la
+    if ($file_info['error'] !== UPLOAD_ERR_OK) {
+        $error_message = match ($file_info['error']) {
+            UPLOAD_ERR_INI_SIZE => 'Erreur: Le fichier est trop grand (ini_size).',
+            UPLOAD_ERR_FORM_SIZE => 'Erreur: Le fichier est trop grand (form_size).',
+            UPLOAD_ERR_PARTIAL => 'Erreur: Fichier partiellement uploadé.',
+            UPLOAD_ERR_NO_FILE => 'Erreur: Aucun fichier n\'a été envoyé.',
+            default => 'Erreur: Erreur d\'upload inconnue (' . $file_info['error'] . ')',
+        };
+        // Arrêtez le script et affichez l'erreur pour diagnostiquer
+        die("Erreur d'Upload : " . $error_message);
+    }
+
+    // Vérifiez la taille du fichier temporaire (il devrait être > 0)
+    if (!is_uploaded_file($file_info['tmp_name']) || filesize($file_info['tmp_name']) === 0) {
+        die("Erreur d'Upload: Le fichier temporaire est vide ou invalide.");
+    }
+    // --- LOGIQUE D'UPLOAD SÉCURISÉ (Propale Correc) ---
+    $allowed = ['jpg','jpeg','png','bmp'];
+    $baseName = basename($_FILES['file']['name']);
+    $ext = strtolower(pathinfo($baseName, PATHINFO_EXTENSION));
+
+    // Vérifie si l'extension est autorisée ET si c'est bien un fichier uploadé
+    if (in_array($ext, $allowed, true) && is_uploaded_file($_FILES['file']['tmp_name'])) {
+
+        // Chemin vers le dossier 'images' (monte d'un niveau, puis va dans 'images')
+        $targetDir = '../images/';
+
+        // Crée le dossier si besoin
+        if (!is_dir($targetDir)) mkdir($targetDir, 0755, true);
+
+        $targetPath = $targetDir . $baseName;
+
+        // Déplacement du fichier
+        if (move_uploaded_file($_FILES['file']['tmp_name'], $targetPath)) {
+            $file_result = 'images\\' . $baseName; // Succès, chemin pour la BD
         } else {
-            $file_result = 'Error';
+            $file_result = 'Error'; // Échec du déplacement
         }
-
+    } else {
+        $file_result = 'Error'; // Fichier non autorisé
+    }
 		include("../Parametres.php");
 		include("../Fonctions.inc.php");
 		include("../Donnees.inc.php");
@@ -35,15 +65,23 @@
         $mysqli->query("SET NAMES 'utf8mb4' COLLATE 'utf8mb4_0900_ai_ci'");
 
         if(isset($_POST["libelle"]) && isset($_POST["prix"]) && isset($_POST["descriptif"])){
-			
+
 			$ok = true;
-			if(!preg_match('/^([A-Za-z]{0,80}$)/', $_POST["libelle"])){
+            // MODIF
+			/* if(!preg_match('/^([A-Za-z]{0,80}$)/', $_POST["libelle"])){
 				$ok = false;
 			}
-		
+
 			if(!preg_match('/^([0-9]+$)/', $_POST["prix"])){
 					$ok = false;
-			}
+			}*/
+            if (!preg_match('/^[\p{L}0-9\s.,\'"-]{1,80}$/u', $_POST["libelle"])) {
+                $ok = false;
+            }
+
+            if (!preg_match('/^[0-9]+(\.[0-9]{1,2})?$/', $_POST["prix"])) {
+                $ok = false;
+            }
 			
 				if($ok){
 					$libelle = mysqli_real_escape_string($mysqli,$_POST["libelle"]);
@@ -81,7 +119,7 @@
                     $stmt->close();
 
 					query($mysqli,'insert into APPARTIENT (id_prod,id_rub) values ((select max(id_prod) from PRODUITS),(select id_rub from RUBRIQUES where libelle_rub = \''.$rubrique.'\'))');
-                    echo "Engretrement reussi";
+                    echo "Enregistrement reussi";
 				}
 				else
 				{
