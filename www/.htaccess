@@ -1,30 +1,11 @@
 # Désactiver le listing des dossiers
 Options -Indexes
 
-# Autoriser l'accès à la racine du dossier
-<If "%{REQUEST_URI} == '/'">
-    Require all granted
-</If>
-
-# Autoriser l'accès au dossier css
-<If "%{REQUEST_URI} =~ m#^/css/#">
-    Require all granted
-</If>
-
-# Autoriser l'accès au dossier js
-<If "%{REQUEST_URI} =~ m#^/js/#">
-    Require all granted
-</If>
-
-# Autoriser l'accès au dossier fonts
-<If "%{REQUEST_URI} =~ m#^/fonts/#">
-    Require all granted
-</If>
-
-# Bloquer l'accès à tous les fichiers par défaut
-Require all denied
-
-# Autoriser l'accès uniquement pour les fichiers .php
-<FilesMatch "\.php$">
-    Require all granted
+# Refuserer les accès depuis l'url aux images sauf si elles sont appelées par une page du site
+<FilesMatch "\.(jpg|jpeg|png|gif|svg)$">
+    # TODO Ajouter l'ip du serveur pour le deploiement
+    SetEnvIfNoCase Referer "^https?://(www\.)?(localhost|127\.0\.0\.1)([:/]|$)" allow_ref
+    Order Deny,Allow
+    Deny from all
+    Allow from env=allow_ref
 </FilesMatch>
