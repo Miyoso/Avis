@@ -39,7 +39,8 @@ function uploadFichier()
 	}
 }
 
-//on s'assure que chaque produit possède les propriétés Libelle, Prix et UniteDeVente
+// MODIF on a enleve UniteDeVente car il n'était pas du tout utile dans notre db
+//on s'assure que chaque produit possède les propriétés Libelle, Prix
 function xmlValide($dom)
 {
 	$produitList = $dom->getElementsByTagName('Produit');
@@ -47,7 +48,6 @@ function xmlValide($dom)
 	{	
 		$estValide['Libelle'] = false;
 		$estValide['Prix'] = false;
-		$estValide['UniteDeVente'] = false;
 	 
 		$proprieteList = $produit->getElementsByTagName('Propriete');
 		foreach($proprieteList as $propriete)
@@ -55,8 +55,6 @@ function xmlValide($dom)
 			if($propriete->getAttribute('nom') == 'Libelle') $estValide['Libelle'] = true;
 			
 			if($propriete->getAttribute('nom') == 'Prix') $estValide['Prix'] = true;
-			
-			if($propriete->getAttribute('nom') == 'UniteDeVente') $estValide['UniteDeVente'] = true;
 		}
 		
 		if(!$estValide['Libelle'])
@@ -69,13 +67,6 @@ function xmlValide($dom)
 		if(!$estValide['Prix'])
 		{
 			$_SESSION['message'] = '<div style="text-align:center"><h1>Erreur ligne '.$propriete->getLineNo().'. Le produit n\'a pas de propriété Prix.</h1><br /><br /><a href="administration.php">Cliquez ici pour retourner à l\'administration.</a></div>';
-			header('Location: message.php');
-			exit;
-		}
-		
-		if(!$estValide['UniteDeVente'])
-		{
-			$_SESSION['message'] = '<div style="text-align:center"><h1>Erreur ligne '.$propriete->getLineNo().'. Le produit n\'a pas de propriété UniteDeVente.</h1><br /><br /><a href="administration.php">Cliquez ici pour retourner à l\'administration.</a></div>';
 			header('Location: message.php');
 			exit;
 		}
@@ -157,13 +148,13 @@ function parserRub($dom)
 		{
 			unset($rub);
 
-			foreach($rubrique->getElementsByTagName('Nom') as $nom) $rub['Nom'] = utf8_decode($nom->nodeValue);
+			foreach($rubrique->getElementsByTagName('Nom') as $nom) $rub['Nom'] = $nom->nodeValue;
 
 			$rubSupList = $rubrique->getElementsByTagName('RubriquesSuperieures');
 			foreach($rubSupList as $rubSup)
 			{
 				$rubriqueList2 = $rubSup->getElementsByTagName('Rubrique');
-				foreach($rubriqueList2 as $rubrique2) $rub['RubriquesSuperieures'][] = utf8_decode($rubrique2->nodeValue);
+				foreach($rubriqueList2 as $rubrique2) $rub['RubriquesSuperieures'][] = $rubrique2->nodeValue;
 			}
 
 			if(isset($rub)) insererRub($rub);
@@ -186,25 +177,26 @@ function insererProd($prod)
         $result = mysqli_prepare($mysqli, "SELECT ID_RUB FROM RUBRIQUES WHERE LIBELLE_RUB=?");
         mysqli_stmt_bind_param($result, "s", $prod['Rubriques'][0]);
         mysqli_stmt_execute($result);
-        mysqli_stmt_store_result($result);
+        mysqli_stmt_bind_result($result, $id_rub);
+        mysqli_stmt_fetch($result);
+        mysqli_stmt_close($result);
 
         // MODIF if(mysql_num_rows($result)==0) mysql_query('insert into rubrique (Libelle_rub) values("Divers")');
-        if(mysqli_stmt_num_rows($result) == 0)
-        {
+        if (!$id_rub) {
             $insert = mysqli_prepare($mysqli, "INSERT INTO RUBRIQUES (LIBELLE_RUB) VALUES (?)");
             mysqli_stmt_bind_param($insert, "s", $prod['Rubriques'][0]);
             mysqli_stmt_execute($insert);
+            $id_rub = mysqli_insert_id($mysqli);
             mysqli_stmt_close($insert);
         }
-        mysqli_stmt_close($result);
     }
 
-	// MODIF mysql_query('insert into produit (Libelle, Prix, UniteDeVente, Descriptif, Photo) values("'.$prod['Libelle'].'","'.$prod['Prix'].'","'.$prod['UniteDeVente'].'","'.$prod['Descriptif'].'","'.$prod['Photo'].'")');
+	// MODIF mysql_query('insert into produit (Libelle, Prix, Descriptif, Photo) values("'.$prod['Libelle'].'","'.$prod['Prix'].'","'.$prod['UniteDeVente'].'","'.$prod['Descriptif'].'","'.$prod['Photo'].'")');
     //on récupère l'id du produit que l'on vient d'insérer
     // MODIF $result = mysql_query('select id_prod from produit where Libelle="'.$prod['Libelle'].'" order by id_prod DESC');
     // MODIF $id_prod = mysql_fetch_row($result);
-    $result = mysqli_prepare($mysqli, "INSERT INTO PRODUITS (LIBELLE, PRIX, UNITEDEVENTE, DESCRIPTIF, PHOTO) VALUES (?, ?, ?, ?, ?)");
-    mysqli_stmt_bind_param($result, "sdsss", $prod['Libelle'], $prod['Prix'], $prod['UniteDeVente'], $prod['Descriptif'], $prod['Photo']);
+    $result = mysqli_prepare($mysqli, "INSERT INTO PRODUITS (LIBELLE, PRIX, DESCRIPTIF, PHOTO) VALUES (?, ?, ?, ?)");
+    mysqli_stmt_bind_param($result, "sdss", $prod['Libelle'], $prod['Prix'], $prod['Descriptif'], $prod['Photo']);
     mysqli_stmt_execute($result);
     $id_prod = mysqli_insert_id($mysqli);
     mysqli_stmt_close($result);
@@ -223,16 +215,32 @@ function insererProd($prod)
         mysqli_stmt_fetch($result);
         mysqli_stmt_close($result);
 
-        $result = mysqli_prepare($mysqli, "INSERT INTO APPARTIENT (ID_PROD, ID_RUB) VALUES (?, ?)");
+        if (!$id_rub) {
+            $insert = mysqli_prepare($mysqli, "INSERT INTO RUBRIQUES (LIBELLE_RUB) VALUES (?)");
+            mysqli_stmt_bind_param($insert, "s", $libelle);
+            mysqli_stmt_execute($insert);
+            $id_rub = mysqli_insert_id($mysqli);
+            mysqli_stmt_close($insert);
+        }
+
+        $result = mysqli_prepare($mysqli, "SELECT 1 FROM APPARTIENT WHERE ID_PROD=? AND ID_RUB=?");
         mysqli_stmt_bind_param($result, "ii", $id_prod, $id_rub);
         mysqli_stmt_execute($result);
+        mysqli_stmt_store_result($result);
+        $relation_existe = mysqli_stmt_num_rows($result) > 0;
         mysqli_stmt_close($result);
+
+        if (!$relation_existe) {
+            $result = mysqli_prepare($mysqli, "INSERT INTO APPARTIENT (ID_PROD, ID_RUB) VALUES (?, ?)");
+            mysqli_stmt_bind_param($result, "ii", $id_prod, $id_rub);
+            mysqli_stmt_execute($result);
+            mysqli_stmt_close($result);
+        }
     }
 
 	//on supprime des élements de $prod pour se retrouver avec les propriétés que nous n'avons pas encore traitées
 	unset($prod['Libelle']);
 	unset($prod['Prix']);
-	unset($prod['UniteDeVente']);
 	unset($prod['Descriptif']);
 	unset($prod['Photo']);
 	unset($prod['Rubriques']);
@@ -290,13 +298,13 @@ function parserProd($dom)
 			unset($prod);
 
 			$proprieteList = $produit->getElementsByTagName('Propriete');
-			foreach($proprieteList as $propriete) $prod[utf8_decode($propriete->getAttribute('nom'))] = utf8_decode($propriete->nodeValue);
+			foreach($proprieteList as $propriete) $prod[$propriete->getAttribute('nom')] = $propriete->nodeValue;
 
-			foreach($produit->getElementsByTagName('Descriptif') as $descriptif) $prod['Descriptif'] = utf8_decode($descriptif->nodeValue);
+			foreach($produit->getElementsByTagName('Descriptif') as $descriptif) $prod['Descriptif'] = $descriptif->nodeValue;
 
 			foreach($produit->getElementsByTagName('Rubriques') as $rubriques)
 			{
-				foreach($rubriques->getElementsByTagName('Rubrique') as $rubrique) $prod['Rubriques'][] =  utf8_decode($rubrique->nodeValue);
+				foreach($rubriques->getElementsByTagName('Rubrique') as $rubrique) $prod['Rubriques'][] =  $rubrique->nodeValue;
 			}
 
 			if(isset($prod)) insererProd($prod);
