@@ -25,21 +25,22 @@
 		<script src="js/skel.min.js"></script>
 		<script src="js/skel-layers.min.js"></script>
 		<script src="js/init.js"></script>
-		<script>
-			$().ready(function() {
-				$('#submit').click(function (){
-				$.ajax({
-					type: 'POST',
-					url: 'fonctions/fonctionsLogin.php',
-					data: {login : $('#login').val(), password : $('#mdp').val()},
-					success: function(data){
-								alert(data);
-								//location.reload();						
-					},
-				});
-			});
-			});
-		</script>
+<!-- requete ajax desactivée pour le moment -->
+<!--		<script>-->
+<!--			$().ready(function() {-->
+<!--				$('#submit').click(function (){-->
+<!--				$.ajax({-->
+<!--					type: 'POST',-->
+<!--					url: 'fonctions/fonctionsLogin.php',-->
+<!--					data: {login : $('#login').val(), password : $('#mdp').val()},-->
+<!--					success: function(data){-->
+<!--								alert(data);-->
+<!--								//location.reload();						-->
+<!--					},-->
+<!--				});-->
+<!--			});-->
+<!--			});-->
+<!--		</script>-->
 		<noscript>
 			<link rel="stylesheet" href="css/skel.css" />
 			<link rel="stylesheet" href="css/style.css" />

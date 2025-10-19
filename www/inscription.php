@@ -34,7 +34,7 @@
 			<div id="main" class="wrapper style4">
 				<div class="container">
 					<div class="row">
-				
+
 						<!-- Content -->
 						<div id="content" class="8u skel-cell-important">
 							<section>
@@ -43,6 +43,7 @@
 								</header>
 								<div id="container" class="clear">
     <!-- main content -->
+    <!-- Le Formulaire d'inscription à été modifié pour vérifier les saisies côté client -->
     <div id="homepage" style="min-height:400px">
 	<div class="modal-dialog">
 			<div class = "modal-content">
@@ -50,37 +51,57 @@
 				<h4>Créer un compte</h4>
 				</div>
 				<div class="modal-body">
-					<form method="post" action="enregistrer.php" autocomplete="off">
+					<form id="formInscription" method="post" action="enregistrer.php" autocomplete="off">
 						<div>
-							Login: <input type="text" maxlength="100" name="loginbdd" /><br/>
+							<label for="login">Login:</label>
+							<input id="login" name="loginbdd" type="text" maxlength="100" required pattern="[A-Za-z0-9._\- ]{2,100}" title="3 à 100 caractères : lettres, chiffres, . _ - et espaces autorisés" />
+							<br/>
 						</div>
 						<div>
-							Password<input type="password" maxlength="100" name="passwordbdd"/><br/>
+							<label for="password">Password:</label>
+							<input id="password" name="passwordbdd" type="password" minlength="8" maxlength="100" required title="Mot de passe (min 8 caractères)" />
+							<br/>
 						</div>
 						<div>
-							Email: <input type="email" maxlength="200" name="emailbdd"/><br/>
+							<label for="email">Email:</label>
+							<input id="email" name="emailbdd" type="email" maxlength="200" required />
+							<br/>
 						</div>
 
 						<div>
-							Nom: <input type='text' placeholder='Nom' maxlength='200' name='nombdd'/><br/>
+							<label for="nombdd">Nom:</label>
+							<input id="nombdd" name="nombdd" type="text" placeholder="Nom" maxlength="50" pattern="[A-Za-z'\- ]{1,50}" required title="Lettres et - ' uniquement (max 50)" />
+							<br/>
 						</div>
 						<div>
-							Prénom: <input type='text' placeholder='Prénom' maxlength='100' name='prenombdd' /><br/>
+							<label for="prenombdd">Prénom:</label>
+							<input id="prenombdd" name="prenombdd" type="text" placeholder="Prénom" maxlength="50" pattern="[A-Za-z'\- ]{0,50}" title="Lettres et - ' uniquement" />
+							<br/>
 						</div>
 						<div>
-							Date de Naissance: <input type='date' name='datebdd' placeholder='Date de Naissance'/>
+							<label for="datebdd">Date de Naissance:</label>
+							<input id="datebdd" name="datebdd" type="date" placeholder="Date de Naissance" />
 						</div>
 						<div>
-							<br/>Telephone: <input type='text' placeholder='Telephone' maxlength='15' name='telephonebdd'/><br/>
+							<br/>
+							<label for="telephonebdd">Telephone:</label>
+							<input id="telephonebdd" name="telephonebdd" type="tel" maxlength="20" pattern="\+?[0-9\s\-]{9,20}" title="Numéro de téléphone (9 à 20 chiffres, espaces, - et + autorisés)" />
+							<br/>
 						</div>
 						<div>
-							Adresse: <input type='textarea' placeholder='Adresse' maxlength='500' name='adressebdd'/><br/>
+							<label for="adressebdd">Adresse:</label>
+							<textarea id="adressebdd" name="adressebdd" placeholder="Adresse" maxlength="500" rows="3"></textarea>
+							<br/>
 						</div>
 						<div>
-							Ville: <input type='textarea' placeholder='Ville' maxlength='100' name='villebdd'/><br/>
+							<label for="villebdd">Ville:</label>
+							<input id="villebdd" name="villebdd" type="text" placeholder="Ville" maxlength="100" />
+							<br/>
 						</div>
 						<div>
-							Code Postal: <input type='textarea' placeholder='Code Postal' maxlength='50' name='codepostalbdd'/><br/>
+							<label for="codepostalbdd">Code Postal:</label>
+							<input id="codepostalbdd" name="codepostalbdd" type="text" placeholder="Code Postal" maxlength="20" pattern="[0-9A-Za-z \-]{2,20}" title="Code postal valide" />
+							<br/>
 						</div>
 						<div>
 							<label class='radio-inline active'><input type='radio' name='optradio' checked='' value='Homme'/>Homme</label>
@@ -95,21 +116,20 @@
 							if(isset($_SESSION["inscription"])){
 								$arr = $_SESSION["inscription"];
 								foreach($arr as $item){
-									echo '<li>'.$item.'</li>';
+									echo '<li>'.htmlspecialchars($item, ENT_QUOTES, 'UTF-8').'</li>';
 								}
 							}
 							echo '</ul>';
 							unset($_SESSION["inscription"]);
 						?>
 						</div>
-					</div>					
+					</form>
 				</div>
-				</form>
-			</div>
+				</div>
     <!-- / content body -->
   </div>
-							</section>
-						</div>						
+						</section>
+						</div>
 					</div>
 				</div>
 			</div>
