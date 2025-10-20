@@ -1,6 +1,11 @@
 <?php
 	session_start();
-	if(!isset($_SESSION["login"])){
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    $csrf_token = $_SESSION['csrf_token'];
+
+if(!isset($_SESSION["login"])){
 		header('location: profil.php');
 	}
 	include 'fonctions/fonctionsLayout.php';
@@ -79,7 +84,7 @@
 									<h2>Ajouter un produit</h2>
 								</header>
 								<div id="reponse"></div>
-								<?php ajouterProduit($mysqli); ?>
+								<?php ajouterProduit($mysqli, $csrf_token); ?>
 							</section>
 						</div>					
 					</div>

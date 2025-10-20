@@ -1,5 +1,10 @@
 <?php
 session_start();
+
+if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    die("Erreur CSRF : requête invalide.");
+}
+
 include("Parametres.php");
 include("Fonctions.inc.php");
 include("Donnees.inc.php");

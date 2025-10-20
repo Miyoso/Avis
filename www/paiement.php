@@ -2,6 +2,11 @@
 	session_start();
 	include 'fonctions/fonctionsLayout.php';
 	include 'fonctions/fonctionsPaiement.php';
+
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    $csrf_token = $_SESSION['csrf_token'];
 ?>
 <!DOCTYPE HTML>
 <!--

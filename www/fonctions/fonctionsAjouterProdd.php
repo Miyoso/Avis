@@ -1,5 +1,9 @@
 <?php
 $file_result = '';
+session_start();
+if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+    die("Erreur CSRF : formulaire non autorisé.");
+}
 
 // Vérification de l'erreur d'upload système
 if($_FILES['file']['error'] > 0){

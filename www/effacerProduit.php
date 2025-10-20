@@ -3,6 +3,10 @@ session_start();
 include("Parametres.php");
 include("Fonctions.inc.php");
 include("Donnees.inc.php");
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+$csrf_token = $_SESSION['csrf_token'];
 
 
 if (isset($_SESSION["login"]) && $_SESSION["login"] = 'admin' && isset($_POST["id"])) {

@@ -4,6 +4,10 @@
 	}
 	include_once 'fonctions/fonctionsLayout.php';
 	include_once 'afficherProduits.php';
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    $csrf_token = $_SESSION['csrf_token'];
 ?>
 <!DOCTYPE HTML>
 <!--
@@ -39,7 +43,8 @@
 				$.ajax({
 					type: 'POST',
 					url: 'fonctions/fonctionsPanier.php',
-					data: {item : e},
+					data: {item : e,
+                        csrf_token: '<?= $csrf_token ?>'},
 					success: function(data){
 								alert(data);					
 					},
@@ -50,7 +55,8 @@
 				$.ajax({
 					type: 'POST',
 					url: 'fonctions/fonctionsFav.php',
-					data: {item : e},
+					data: {item : e,
+                        csrf_token: '<?= $csrf_token ?>'},
 					success: function(data){
 								alert(data);					
 					},

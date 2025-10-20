@@ -2,6 +2,10 @@
 	session_start();
 	include 'fonctions/fonctionsLayout.php';
 	include 'fonctions/fonctionsInscription.php';
+
+    if (!isset($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
 ?>
 <!DOCTYPE HTML>
 <!--
@@ -52,7 +56,8 @@
 				</div>
 				<div class="modal-body">
 					<form id="formInscription" method="post" action="enregistrer.php" autocomplete="off">
-						<div>
+                        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                        <div>
 							<label for="login">Login:</label>
 							<input id="login" name="loginbdd" type="text" maxlength="100" required pattern="[A-Za-z0-9._\- ]{2,100}" title="3 à 100 caractères : lettres, chiffres, . _ - et espaces autorisés" />
 							<br/>

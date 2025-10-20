@@ -1,6 +1,10 @@
 <?php
 	session_start();
 	include_once 'fonctions/fonctionsLayout.php';
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    $csrf_token = $_SESSION['csrf_token'];
 ?>
 <!DOCTYPE HTML>
 <!--
@@ -30,7 +34,8 @@
 				$.ajax({
 					   url: "fonctions/fonctionsMdp.php",
 					   method: "POST",
-					   data: {email : $("#email").val()},
+					   data: {email : $("#email").val(),
+                           csrf_token: '<?= $csrf_token ?>'},
 					   success: function(data)
 							{
 								alert(data);

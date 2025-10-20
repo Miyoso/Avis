@@ -3,6 +3,10 @@
 	if(!isset($_SESSION["login"])){
 		header('location: profil.php');
 	}
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    $csrf_token = $_SESSION['csrf_token'];
 	include 'fonctions/fonctionsLayout.php';
 	include 'fonctions/fonctionsAjouterRub.php';
 	

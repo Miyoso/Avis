@@ -1,4 +1,9 @@
 <?php
+session_start();
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+$csrf_token = $_SESSION['csrf_token'];
 	include 'fonctions/fonctionsLayout.php';
 	include 'fonctions/fonctionsFavoris.php';
 ?>
@@ -30,7 +35,8 @@
 				$.ajax({
 					type: 'POST',
 					url: 'fonctions/fonctionsPanier.php',
-					data: {item : e},
+					data: {item : e,
+                        csrf_token: '<?= $csrf_token ?>'},
 					success: function(data){
 								alert(data);
 								location.reload();
@@ -42,7 +48,8 @@
 				$.ajax({
 					type: 'POST',
 					url: 'fonctions/fonctionsFav.php',
-					data: {item : e, x : '1'},
+					data: {item : e, x : '1',
+                        csrf_token: '<?= $csrf_token ?>'},
 					success: function(data){
 								alert(data);
                                 location.reload(); // Ajout de cette ligne pour recharger la page

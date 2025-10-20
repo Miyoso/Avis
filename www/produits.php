@@ -5,6 +5,10 @@ include 'fonctions/fonctionsProduits.php';
 include("Parametres.php");
 include_once 'Fonctions.inc.php';
 include_once 'Donnees.inc.php';
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+$csrf_token = $_SESSION['csrf_token'];
 
 $mysqli = mysqli_connect($host, $user, $pass, $base) or die("Erreur de connexion : " . mysqli_connect_error());
 mysqli_select_db($mysqli, $base) or die("Une erreur est survenue.");
@@ -42,7 +46,9 @@ $rubrique = $_GET['rubrique'] ?? '';
 			$.ajax({
 					   url: "effacerProduit.php",
 					   method: "POST",
-					   data: {id : e},
+					   data: {id : e,
+                              csrf_token: '<?= $csrf_token ?>'
+                       },
 					   success: function(data)
 							{
 								alert(data);
@@ -62,7 +68,9 @@ $rubrique = $_GET['rubrique'] ?? '';
                 $.ajax({
                     type: 'POST',
                     url: 'fonctions/fonctionsPanier.php',
-                    data: {item : e},
+                    data: {item : e,
+                           csrf_token: '<?= $csrf_token ?>'
+                    },
                     success: function(data){
                         alert(data);
                     },
@@ -73,7 +81,9 @@ $rubrique = $_GET['rubrique'] ?? '';
                 $.ajax({
                     type: 'POST',
                     url: 'fonctions/fonctionsFav.php',
-                    data: {item : e},
+                    data: {item : e,
+                           csrf_token: '<?= $csrf_token ?>'
+                    },
                     success: function(data){
                         alert(data);
                     },

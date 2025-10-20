@@ -1,5 +1,5 @@
 <?php
-	function ajouterProduit($mysqli){
+	function ajouterProduit($mysqli, $csrf_token){
 		include("Parametres.php");
 		include("Fonctions.inc.php");
 		include("Donnees.inc.php");
@@ -14,8 +14,10 @@
         echo "<h2>Ajouter produit</h2><br/>";
         // Ajout du formulaire avec l'attribut onsubmit pour l'appel AJAX
 		echo "<form  enctype='multipart/form-data' onsubmit='envoyerFormulaireAjax(event)' action='fonctions/fonctionsAjouterProdd.php' method='post' class='putImages'>";
-		echo "<table>";
-		echo "<tr><td wnameth='180px'>Libelle</td><td><input type='text' name='libelle'></input></td></tr>";
+        echo '<input type="hidden" name="csrf_token" value="'.htmlspecialchars($csrf_token).'"/>';
+
+        echo "<table>";
+		echo "<tr><td width='180px'>Libelle</td><td><input type='text' name='libelle'></input></td></tr>";
 		echo "<tr><td>Prix</td><td><input type='text' name='prix'></input></td></tr>";
 		echo "<tr><td>Descriptif</td><td><input type='text' name='descriptif'></input></td></tr>";
 
