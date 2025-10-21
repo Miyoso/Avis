@@ -15,6 +15,9 @@ services:
     ports:
       - "8080:80"
 
+    env_file:
+      - .env
+
     # Utilisation des variables d'environnement pour la configuration de la base de données
     environment:
         DB_HOST: db
