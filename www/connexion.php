@@ -5,7 +5,11 @@
 	}
 	include 'fonctions/fonctionsLayout.php';
 	include 'fonctions/fonctionsConnexion.php';
-	
+
+    if(empty($_SESSION['csrf_token'])){
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    $csrf_token = $_SESSION['csrf_token'];
 ?>	
 <!DOCTYPE HTML>
 <!--
@@ -48,7 +52,8 @@
                         url: 'fonctions/fonctionsLogin.php',
                         data: {
                             login: $('#login').val(),
-                            password: $('#password').val()
+                            password: $('#password').val(),
+                            csrf_token: '<?= $csrf_token ?>'
                         },
                         success: function(data){
                             if (data === 'OK') {

@@ -2,6 +2,10 @@
 	session_start();
 	include 'fonctions/fonctionsLayout.php';
 	include 'fonctions/fonctionsAcheter.php';
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    $csrf_token = $_SESSION['csrf_token'];
 ?>
 <!DOCTYPE HTML>
 <!--
@@ -30,7 +34,8 @@
 						$.ajax({
 							type: 'POST',
 							url: 'fonctions/fonctionsRemove.php',
-							data: {item : e,pos : i},
+							data: {item : e,pos : i,
+                                csrf_token: '<?= $csrf_token ?>'},
 							success: function(data){
 										alert(data);
 										location.reload();

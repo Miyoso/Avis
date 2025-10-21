@@ -1,4 +1,8 @@
 <?php
+session_start();
+if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    die('Token CSRF invalide');
+}
 	if(isset($_POST["item"])){
 		if(isset($_COOKIE["panier"])){
 			$arr = json_decode($_COOKIE["panier"],true);

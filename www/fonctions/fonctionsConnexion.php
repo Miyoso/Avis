@@ -61,11 +61,16 @@ function afficherFormulaire($data)
 			<input class="'.$elt['class'].'" type="'.$elt['type'].'" id="'.$elt['name'].'" name="'.$elt['name'].'"/>';
 			
 	}
-	echo '<br/><a href="mdp.php">mot de passe oublié?</a>';
+    echo '<br/><a href="mdp.php">mot de passe oublié?</a>';
 }
 
 function afficherConnexion()
-{	
+{
+    if(empty($_SESSION['csrf_token'])){
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    $csrf_token = $_SESSION['csrf_token'];
+
 	if(isset($_GET['source']) && $_GET['source']=='livraison')
 	{
         // Ancien code vulnérable :
@@ -77,8 +82,10 @@ function afficherConnexion()
         // fin de correction
 	}
 	else echo '<div>';
-	
-		$data[] = array('name'=>'login', 'type'=>'text', 'label'=>'Pseudo:', 'class'=>'inputMoyen');						
+
+        echo '<input type="hidden" name="csrf_token" value="'.$csrf_token.'"/>';
+
+        $data[] = array('name'=>'login', 'type'=>'text', 'label'=>'Pseudo:', 'class'=>'inputMoyen');
 		$data[] = array('name'=>'password', 'type'=>'password', 'label'=>'Mot de passe:', 'class'=>'inputMoyen');			
 		afficherFormulaire($data);
 		unset($data);

@@ -1,6 +1,10 @@
 <?php
 	session_start();
 	include 'fonctions/fonctionsLayout.php';
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    $csrf_token = $_SESSION['csrf_token'];
 	if(isset($_SESSION["login"])){
 		  include("Parametres.php");
 		  include("Fonctions.inc.php");
@@ -105,8 +109,10 @@
 									<h2>Vos Informations</h2>
 								</header>
 									<?php
-								echo '<form action="update.php" method="post">';
-									if(isset($login)){
+                                    echo '<form action="update.php" method="post">';
+                                    echo '<input type="hidden" name="csrf_token" value="' . $csrf_token . '">';
+
+                                    if(isset($login)){
 										echo "					
 										<table wnameth='30%'>
 										<tr>

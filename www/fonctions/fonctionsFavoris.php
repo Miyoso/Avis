@@ -1,5 +1,4 @@
 <?php
-	session_start();
 	function afficherFavoris(){
 		include("Parametres.php");
 		include("Fonctions.inc.php");
