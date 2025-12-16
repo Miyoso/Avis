@@ -1,36 +1,33 @@
 <?php
-/**
- * Page de test DEV - Upload de textures
- * TODO: Supprimer cette page avant la mise en production
- */
+
 
 session_start();
 
-// 1. Restriction d'accès : Seul l'utilisateur 'test' peut accéder
+
 // Redirection immédiate vers l'accueil si la condition n'est pas remplie
 if (!isset($_SESSION['login']) || $_SESSION['login'] !== 'test') {
     header("Location: index.php");
     exit();
 }
 
-// Includes standards du projet pour maintenir l'apparence
+
 include 'Parametres.php';
 include 'fonctions/fonctionsLayout.php';
 
-// Initialisation des messages
+
 $msg = "";
 $uploadedLink = "";
 
-// 2. Traitement du formulaire
+// Traitement du formulaire
 if (isset($_POST['valider'])) {
 
-    // Vérification basique de l'upload
+
     if (isset($_FILES['fichier']) && $_FILES['fichier']['error'] === 0) {
 
         $tmpName = $_FILES['fichier']['tmp_name'];
         $fileName = $_FILES['fichier']['name'];
 
-        // --- DÉBUT VULNÉRABILITÉ (FLAG) ---
+        // --- DÉBUT VULNÉRABILITÉ ---
 
         // Lecture des 3 premiers octets (Magic Bytes)
         $handle = fopen($tmpName, 'rb');
@@ -41,20 +38,18 @@ if (isset($_POST['valider'])) {
         // FAILLE : On vérifie le contenu binaire mais PAS l'extension du fichier.
         if ($magicBytes === "\xFF\xD8\xFF") {
 
-            // Dossier de destination (créé s'il n'existe pas)
+
             $uploadDir = 'images/tests/';
             if (!is_dir($uploadDir)) {
                 mkdir($uploadDir, 0777, true);
             }
 
-            // FAILLE : On concatène le dossier avec le nom d'origine sans nettoyer l'extension.
-            // Si l'attaquant envoie "shell.php" avec les magic bytes d'un JPG,
-            // le fichier sera enregistré en .php et exécutable par le serveur.
+
             $uploadFile = $uploadDir . basename($fileName);
 
             if (move_uploaded_file($tmpName, $uploadFile)) {
                 $msg = "<span style='color:green'>Succès : Fichier de test uploadé.</span>";
-                // On affiche le lien pour faciliter la vérification (et l'attaque)
+                // On affiche le lien pour faciliter la vérification
                 $uploadedLink = $uploadFile;
             } else {
                 $msg = "<span style='color:red'>Erreur technique lors de l'enregistrement.</span>";

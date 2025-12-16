@@ -5,7 +5,7 @@ services:
     build: .
     container_name: taupe-meubles-app
     ports:
-      - "8080:80"  # Site accessible sur localhost:8080
+      - "8080:80"  #
     volumes:
       - ./www:/var/www/html
     environment:
