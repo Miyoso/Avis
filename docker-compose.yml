@@ -1,65 +1,34 @@
 version: '3.9'
 
 services:
-  # ------------------------------------
-  # APPLICATION PHP (SERVEUR WEB)
-  # ------------------------------------
   app:
     build: .
     container_name: taupe-meubles-app
-
-    volumes:
-      - ./www:/var/www/html #TODO remettre le :ro # Mettre le code source en lecture seule
-      - ./security.conf:/etc/apache2/conf-enabled/security.conf:ro
-
     ports:
-      - "8080:80"
-
-    env_file:
-      - .env
-
-    # Utilisation des variables d'environnement pour la configuration de la base de données
+      - "8080:80"  # Site accessible sur localhost:8080
+    volumes:
+      - ./www:/var/www/html
     environment:
-        DB_HOST: db
-        DB_USER: ${DB_USER}
-        DB_PASSWORD: ${DB_PASSWORD}
-        DB_NAME: ${DB_NAME}
-        DB_ID_USER: ${DB_ID_USER}
-
+      - DB_HOST=db
+      - DB_USER=test_user
+      - DB_PASSWORD=test_password
+      - DB_NAME=TaupeMeubles
+      - DB_ID_USER=1
     depends_on:
       - db
-
-    #TODO normalement on devrait utiliser le fichier Initialiser.php
-    #command: php Initialiser.php && apache2-foreground
-
     restart: unless-stopped
 
-  # ------------------------------------
-  # BASE DE DONNÉES MySQL
-  # ------------------------------------
   db:
-    image: mysql:8.0.43
+    image: mysql:8.0
     container_name: taupe-meubles-db
-
-    # Utilisation des variables d'environnement pour la configuration de la base de données
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-
+      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_DATABASE=TaupeMeubles
+      - MYSQL_USER=test_user
+      - MYSQL_PASSWORD=test_password
     volumes:
       - db_data:/var/lib/mysql
-
-    ports:
-    - "3306:3306" #TODO à supprimer en production
-
     restart: unless-stopped
-
-networks:
-  taupe-meubles-network:
-    driver: bridge
 
 volumes:
   db_data:
-    driver: local
